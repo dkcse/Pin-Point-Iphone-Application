@@ -32,6 +32,8 @@
 		<string>CDVCamera</string>
 		<key>org.apache.cordova.connection</key>
 		<string>CDVConnection</string>
+		<key>MapKitView</key>
+		<string>MapKitView</string>
 		<key>org.apache.cordova.contacts</key>
 		<string>CDVContacts</string>
 		<key>org.apache.cordova.debugconsole</key>

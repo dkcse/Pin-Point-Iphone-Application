@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6A09D63216400F080048C06B /* AsyncImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A09D62A16400F080048C06B /* AsyncImageView.m */; };
+		6A09D63316400F080048C06B /* CDVAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A09D62C16400F080048C06B /* CDVAnnotation.m */; };
+		6A09D63416400F080048C06B /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A09D62D16400F080048C06B /* icon.png */; };
+		6A09D63516400F080048C06B /* map-close-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A09D62E16400F080048C06B /* map-close-button.png */; };
+		6A09D63616400F080048C06B /* MapKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A09D63016400F080048C06B /* MapKit.m */; };
+		6A09D63716400F080048C06B /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6A09D63116400F080048C06B /* README.md */; };
+		6A09D63C164010180048C06B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A09D63A16400FA60048C06B /* MapKit.framework */; };
 		6A5C82C01637C5A600E3B801 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A5C82BF1637C5A600E3B801 /* Foundation.framework */; };
 		6A5C82C21637C5A600E3B801 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A5C82C11637C5A600E3B801 /* UIKit.framework */; };
 		6A5C82C41637C5A600E3B801 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A5C82C31637C5A600E3B801 /* CoreGraphics.framework */; };
@@ -42,6 +49,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6A09D62916400F080048C06B /* AsyncImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AsyncImageView.h; path = Plugins/AsyncImageView.h; sourceTree = "<group>"; };
+		6A09D62A16400F080048C06B /* AsyncImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AsyncImageView.m; path = Plugins/AsyncImageView.m; sourceTree = "<group>"; };
+		6A09D62B16400F080048C06B /* CDVAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDVAnnotation.h; path = Plugins/CDVAnnotation.h; sourceTree = "<group>"; };
+		6A09D62C16400F080048C06B /* CDVAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDVAnnotation.m; path = Plugins/CDVAnnotation.m; sourceTree = "<group>"; };
+		6A09D62D16400F080048C06B /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = Plugins/icon.png; sourceTree = "<group>"; };
+		6A09D62E16400F080048C06B /* map-close-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "map-close-button.png"; path = "Plugins/map-close-button.png"; sourceTree = "<group>"; };
+		6A09D62F16400F080048C06B /* MapKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MapKit.h; path = Plugins/MapKit.h; sourceTree = "<group>"; };
+		6A09D63016400F080048C06B /* MapKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MapKit.m; path = Plugins/MapKit.m; sourceTree = "<group>"; };
+		6A09D63116400F080048C06B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.md; path = Plugins/README.md; sourceTree = "<group>"; };
+		6A09D63A16400FA60048C06B /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		6A5C82BB1637C5A600E3B801 /* Pinpoint_Phonegap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pinpoint_Phonegap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A5C82BF1637C5A600E3B801 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6A5C82C11637C5A600E3B801 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -87,6 +104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A09D63C164010180048C06B /* MapKit.framework in Frameworks */,
 				6A5C82C01637C5A600E3B801 /* Foundation.framework in Frameworks */,
 				6A5C82C21637C5A600E3B801 /* UIKit.framework in Frameworks */,
 				6A5C82C41637C5A600E3B801 /* CoreGraphics.framework in Frameworks */,
@@ -114,9 +132,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6A09D62716400EED0048C06B /* Plugins */ = {
+			isa = PBXGroup;
+			children = (
+				6A09D62916400F080048C06B /* AsyncImageView.h */,
+				6A09D62A16400F080048C06B /* AsyncImageView.m */,
+				6A09D62B16400F080048C06B /* CDVAnnotation.h */,
+				6A09D62C16400F080048C06B /* CDVAnnotation.m */,
+				6A09D62D16400F080048C06B /* icon.png */,
+				6A09D62E16400F080048C06B /* map-close-button.png */,
+				6A09D62F16400F080048C06B /* MapKit.h */,
+				6A09D63016400F080048C06B /* MapKit.m */,
+				6A09D63116400F080048C06B /* README.md */,
+			);
+			name = Plugins;
+			sourceTree = "<group>";
+		};
 		6A5C82AD1637C5A600E3B801 = {
 			isa = PBXGroup;
 			children = (
+				6A09D62716400EED0048C06B /* Plugins */,
 				6A5C83171637C5F500E3B801 /* www */,
 				6A5C82D91637C5A600E3B801 /* Pinpoint_Phonegap */,
 				6A5C82BE1637C5A600E3B801 /* Frameworks */,
@@ -135,6 +170,7 @@
 		6A5C82BE1637C5A600E3B801 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6A09D63A16400FA60048C06B /* MapKit.framework */,
 				6A5C82BF1637C5A600E3B801 /* Foundation.framework */,
 				6A5C82C11637C5A600E3B801 /* UIKit.framework */,
 				6A5C82C31637C5A600E3B801 /* CoreGraphics.framework */,
@@ -333,6 +369,9 @@
 				6A5C830D1637C5A600E3B801 /* MainViewController.xib in Resources */,
 				6A5C83111637C5A600E3B801 /* verify.sh in Resources */,
 				6A5C83181637C5F500E3B801 /* www in Resources */,
+				6A09D63416400F080048C06B /* icon.png in Resources */,
+				6A09D63516400F080048C06B /* map-close-button.png in Resources */,
+				6A09D63716400F080048C06B /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -362,6 +401,9 @@
 				6A5C82E01637C5A600E3B801 /* main.m in Sources */,
 				6A5C83081637C5A600E3B801 /* AppDelegate.m in Sources */,
 				6A5C830B1637C5A600E3B801 /* MainViewController.m in Sources */,
+				6A09D63216400F080048C06B /* AsyncImageView.m in Sources */,
+				6A09D63316400F080048C06B /* CDVAnnotation.m in Sources */,
+				6A09D63616400F080048C06B /* MapKit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

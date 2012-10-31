@@ -1,131 +1,110 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
   <head>
-  <title> XML Parsing</title>
-  
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
-	<meta charset="utf-8">
+	<!-- Change this if you want to allow scaling -->
+    <meta name="viewport" content="width=default-width; user-scalable=no" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
 
+    <title>MapTest</title>
 
-	<!-- iPad/iPhone specific css below, add after your main css >  -->
-	<link rel="stylesheet" media="only screen and (max-device-width: 1024px)" href="ipad.css" type="text/css" />		
-	<link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="iphone.css" type="text/css" />		
+  	<!-- 
+  	<link rel="stylesheet" media="only screen and (max-device-width: 1024px)" href="ipad.css" type="text/css" />		
+  	<link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="iphone.css" type="text/css" />		
+  	-->
+  	<script type="text/javascript" charset="utf-8" src="cordova-1.5.0.js"></script>
+  	<script type="text/javascript" charset="utf-8" src="MapKit.js"></script>
+    <script type="text/javascript" charset="utf-8">
+    	// If you want to prevent dragging, uncomment this section
+    	/*
+    	function preventBehavior(e) { 
+        e.preventDefault(); 
+      };
+    	document.addEventListener("touchmove", preventBehavior, false);
+    	*/
 	
-	<!-- If your application is targeting iOS BEFORE 4.0 you MUST put json2.js from http://www.JSON.org/json2.js into your www directory and include it here -->
-	<script type="text/javascript" charset="utf-8" src="cordova-1.5.0.js"></script>
-        
-        <script type="text/javascript">
-            
-            var productImage = new Array();
-            var productTitle = new Array();
-            var zipCodeArray = new Array();
-            
-            var lattitudeSenFransisco = 37.7750;
-            var longitudeSenFransisco = -122.4183;
-            
-            function findStoresAtPresentLocation()
+    	function onBodyLoad() 
+        {
+    		document.addEventListener("deviceready",onDeviceReady,false);
+    	}
+	
+    	function cbMapCallback() 
+        {
+    		alert(arguments[0]);
+    	}
+	
+    	/* When this function is called, PhoneGap has been initialized and is ready to roll */
+    	function onDeviceReady() 
+        {
+				
+    	}
+	
+    	var pins = [
+        { lat:49.281468,
+    			lon:-123.104446,
+    			title:"Nitobi HQ",
+    			pinColor:"purple", 
+    			selected:true
+    		},
+    		{ lat:49.28267206508114,
+    			lon:-123.09438228607178,
+    			title:"Oppenheimer Park",
+    			pinColor:"green", 
+    			selected:false
+    		}
+      ]
+	
+    	function showMap() 
+        {
+    		// do your thing!
+    		var mapOptions = {
+          buttonCallback: "cbMapCallback",
+          height: 360,
+          diameter: 1000,
+          offsetTop: 25,
+          lat: pins[0].lat,
+          lon: pins[0].lon
+        };
+	
+    		window.plugins.mapKit.showMap();
+    		window.plugins.mapKit.setMapData(mapOptions);
+      	    window.plugins.mapKit.addMapPins(pins);		
+    	}
+	
+    	function hideMap() 
+        {
+    		window.plugins.mapKit.hideMap();
+    	}
+	
+    	function clearPins() 
+        {
+    	  window.plugins.mapKit.clearMapPins();
+    	}
+	
+    	function resizeMap() 
+        {
+    		var mapOptions = {
+    	    height:260
+        }
+
+    		window.plugins.mapKit.setMapData(mapOptions);
+    	}
+	
+    	function zoomIn() 
+        {
+    		var mapOptions = 
             {
-                var xmlHttpForStoreZipCode;
-                if (window.XMLHttpRequest)
-                {
-                    xmlHttpForStoreZipCode = new XMLHttpRequest();
-                }
-                xmlHttpForStoreZipCode.open("GET","http://maps.googleapis.com/maps/api/geocode/json?latlng=37.7,-117.2&sensor=false&sensor=false",true);               
-                xmlHttpForStoreZipCode.send();
-                
-                xmlHttpForStoreZipCode.onreadystatechange=function()
-                {
-                    if (xmlHttpForStoreZipCode.readyState==4 && xmlHttpForStoreZipCode.status==200)
-                    {
-                        var xmlDocForZipcode = xmlHttpForStoreZipCode.responseText;
-                        var obj = JSON.parse(xmlDocForZipcode);
-        
-                        console.log(xmlDocForZipcode);
-                        var zipcode = obj.results[0].address_components[5];
-                        alert(obj.results.length);
-                        console.log(obj.results[1]);
-                        console.log(obj.results[0].address_components[5].long_name);
-                        
-                        for(var i=0;i<1;i++)
-                        {
-                            zipCodeArray[i] =  obj.results[i].address_components[5].long_name;
-                        }
-                        alert(zipCodeArray);
-                    }
-                }
-                
-                
+    	    diameter: 30
             }
-            
-            function displayURL()
-            {
-                alert('hi');               
-                alert(productImage.length);
-                for(var i=0;i<productImage.length;i++)
-                {
-                    console.log(productImage[i]);
-                }
-            }
-        
-            function loadXMLDoc(imgId)
-            {
-                var xmlhttp;
-                if (window.XMLHttpRequest)
-                {
-                    // code for IE7+, Firefox, Chrome, Opera, Safari
-                    xmlhttp=new XMLHttpRequest();
-                }
-                else
-                {
-                    // code for IE6, IE5
-                    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-                }
-                xmlhttp.open("GET","http://www.supermarketapi.com/api.asmx/SearchByProductName?APIKEY=93da6ed905&ItemName=Apple",true);
-                xmlhttp.send();
-                
-                xmlhttp.onreadystatechange=function()
-                {
-                    if (xmlhttp.readyState==4 && xmlhttp.status==200)
-                    {
-                        var xmlDoc = xmlhttp.responseXML;
-                        x = xmlDoc.getElementsByTagName("ItemImage");
-                        y = xmlDoc.getElementsByTagName("Itemname");
-                        
-                        for (i=0;i<x.length;i++)
-                        {
-                            productImage[i] = x[i].childNodes[0].nodeValue;
-                        }
-                        document.getElementById("myDiv").innerHTML=productImage[5];
-                        
-                        for(i=0;i<y.length;i++)
-                        {
-                            productTitle[i] = y[i].childNodes[0].nodeValue;
-                        }
-                        console.log(productImage[5]);
-                        document.getElementById("nameDiv").innerHTML=productTitle[0];
-                        var img = document.getElementById(imgId);
-                        img.src = productImage[5];
-                    }
-                }
-            }
-        </script>
+    		window.plugins.mapKit.setMapData(mapOptions);
+  		}
+    
+    </script>
   </head>
-    
-    <body>
-        <h2>AJAX</h2>
-        <div>
-            <img id='imgId' height='100px' width='100px'>
-        </div>
-        
-        <button type="button" onclick= "loadXMLDoc('imgId')">Request data</button>
-        <button type="button" onclick= "displayURL()"> display url</button> 
-        <button type="button" onclick= "findStoresAtPresentLocation()">findStore</button>
-    
-        <div id="myDiv"> </div>
-        <div id="nameDiv"> </div>
-       
-        <!--   view-source:http://www.supermarketapi.com/api.asmx/StoresByZip?APIKEY=93da6ed905&ZipCode=94103
-               view-source:http://www.supermarketapi.com/api.asmx/StoresByZip?APIKEY=93da6ed905&ZipCode=94103
-                           http://maps.googleapis.com/maps/api/geocode/json?latlng=37.7,-117.2&sensor=false   -->
-    </body>
-    </html>
+    <body onload="onBodyLoad()">
+  	<button style="top:400px;position:absolute;" onclick="showMap()">Show</button>
+  	<button style="left:63px;top:400px;position:absolute;" onclick="hideMap()">Hide</button>
+  	<button style="left:115px;top:400px;position:absolute;" onclick="resizeMap()">Shrink</button>
+  	<button style="left:175px;top:400px;position:absolute;" onclick="zoomIn()">Zoom</button>
+  	<button style="left:230px;top:400px;position:absolute;" onclick="clearPins()">Clear Pins</button>
+  </body>
+</html>
