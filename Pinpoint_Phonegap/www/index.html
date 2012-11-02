@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=default-width; user-scalable=no" />
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
 
-    <title>MapTest</title>
+    <title>Pin Point</title>
 
   	<!-- 
   	<link rel="stylesheet" media="only screen and (max-device-width: 1024px)" href="ipad.css" type="text/css" />		
@@ -13,6 +13,7 @@
   	-->
   	<script type="text/javascript" charset="utf-8" src="cordova-1.5.0.js"></script>
   	<script type="text/javascript" charset="utf-8" src="MapKit.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
     <script type="text/javascript" charset="utf-8">
     	// prevent dragging 
     	/*
@@ -67,11 +68,11 @@
             var xmlhttpForStoresAtZipcode;
             if (window.XMLHttpRequest)
             {
-                xmlhttpForStoresAtZipcode=new XMLHttpRequest();
+                xmlhttpForStoresAtZipcode = new XMLHttpRequest();
             }
             else
             {
-                xmlhttpForStoresAtZipcode=new ActiveXObject("Microsoft.XMLHTTP");
+                xmlhttpForStoresAtZipcode = new ActiveXObject("Microsoft.XMLHTTP");
             }
             xmlhttpForStoresAtZipcode.open("GET","http://www.supermarketapi.com/api.asmx/StoresByZip?APIKEY=93da6ed905&ZipCode=95130",true);
             xmlhttpForStoresAtZipcode.send();
