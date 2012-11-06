@@ -1,254 +1,109 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-  <head>
-	<!-- Change this if you want to allow scaling -->
-    <meta name="viewport" content="width=default-width; user-scalable=no" />
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<html>    
+  <head> 
+    <script type="text/javascript" src="../jquery/jquery-1.4.4.min.js"></script>  
+      <script type="text/javascript" charset="utf-8" src="cordova-1.5.0.js"></script>
+      <script type="text/javascript" charset="utf-8" src="MapKit.js"></script>
+      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 
-    <title>Pin Point</title>
-
-  	<!-- 
-  	<link rel="stylesheet" media="only screen and (max-device-width: 1024px)" href="ipad.css" type="text/css" />		
-  	<link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="iphone.css" type="text/css" />		
-  	-->
-  	<script type="text/javascript" charset="utf-8" src="cordova-1.5.0.js"></script>
-  	<script type="text/javascript" charset="utf-8" src="MapKit.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-    <script type="text/javascript" charset="utf-8">
-    	// prevent dragging 
-    	/*
-    	function preventBehavior(e) { 
-        e.preventDefault(); 
-      };
-    	document.addEventListener("touchmove", preventBehavior, false);
-    	*/
-	
-        var productImage = new Array();
-        var productTitle = new Array();
-        var zipCodeArray = new Array();
-        var storesNameAtParticularZipcode = new Array();
-        var storesAddressAtParticularZipcode = new Array();
-        
-        var lattitudeSenFransisco = 37.7750;
-        var longitudeSenFransisco = -122.4183;
-        
-        function findStoresAtPresentLocation()
-        {
-            var xmlHttpForStoreZipCode;
-            if (window.XMLHttpRequest)
-            {
-                xmlHttpForStoreZipCode = new XMLHttpRequest();
-            }
-            xmlHttpForStoreZipCode.open("GET","http://maps.googleapis.com/maps/api/geocode/json?latlng=37.7,-117.2&sensor=false&sensor=false",true);               
-            xmlHttpForStoreZipCode.send();
-            
-            xmlHttpForStoreZipCode.onreadystatechange=function()
-            {
-                if (xmlHttpForStoreZipCode.readyState==4 && xmlHttpForStoreZipCode.status==200)
-                {
-                    var xmlDocForZipcode = xmlHttpForStoreZipCode.responseText;
-                    var parsedString = JSON.parse(xmlDocForZipcode);
-                    console.log(xmlDocForZipcode);
-                    var zipcode = parsedString.results[0].address_components[5];
-                    alert(parsedString.results.length);
-                    console.log(parsedString.results[1]);
-                    console.log(parsedString.results[0].address_components[5].long_name);
+    <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+    <script type="text/javascript" src="gmap3.js"></script> 
+      
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+                  
+                <link rel="stylesheet" href="jquery.mobile-1.1.1.min.css" />
+                <script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+                <script type="text/javascript" src="jquery.mobile-1.1.1.min.js"></script>
+                <script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3&sensor=false&language=en"> </script>
+                <script type="text/javascript">
                     
-                    for(var i=0;i<1;i++)
+                    var demoCenter = new google.maps.LatLng(-33.866943,151.195512);
+                    
+                    var map;
+                    function initialize()
                     {
-                        zipCodeArray[i] =  parsedString.results[i].address_components[5].long_name;
+                        map = new google.maps.Map(document.getElementById('map_canvas'), {
+                                                  zoom: 7,
+                                                  center: demoCenter,
+                                                  mapTypeId: google.maps.MapTypeId.ROADMAP
+                                                  });
                     }
-                    alert(zipCodeArray);
-                }
-            }
-        }
-        
-        function findStoresForZipcode()
-        {
-            var xmlhttpForStoresAtZipcode;
-            if (window.XMLHttpRequest)
-            {
-                xmlhttpForStoresAtZipcode = new XMLHttpRequest();
-            }
-            else
-            {
-                xmlhttpForStoresAtZipcode = new ActiveXObject("Microsoft.XMLHTTP");
-            }
-            xmlhttpForStoresAtZipcode.open("GET","http://www.supermarketapi.com/api.asmx/StoresByZip?APIKEY=93da6ed905&ZipCode=95130",true);
-            xmlhttpForStoresAtZipcode.send();
-            
-            xmlhttpForStoresAtZipcode.onreadystatechange=function()
-            {
-                if (xmlhttpForStoresAtZipcode.readyState==4 && xmlhttpForStoresAtZipcode.status==200)
-                {
-                    alert(xmlhttpForStoresAtZipcode.status);
-                    var xmlDocForStores = xmlhttpForStoresAtZipcode.responseXML;
-                    storeName = xmlDocForStores.getElementsByTagName("Storename");
-                    addressForStore = xmlDocForStores.getElementsByTagName("Address");
                     
-                    for (i=0;i<storeName.length;i++)
+                    function addMarkers()
                     {
-                        storesNameAtParticularZipcode[i] = storeName[i].childNodes[0].nodeValue;
+                        
+                        // perform your AJAX here. In this example the markers are loaded through the cityList array
+//                        $.ajax({
+//                               type:'post',
+//                               url:'test.html',
+//                               data:'',
+//                               success:function(data)
+//                               {
+                               
+                               // imagine that the data in this list
+                               // will be retrieved from the AJAX response
+                               // i used the cityList array just for testing
+                               var infoArray = [
+                                               ['first', -33.850033, 150.6500523, 1],
+                                               ['second', -33.797177,150.406738, 2],
+                                                ['third', -33.700007,151.406738, 3]
+                                               ];
+                               
+                               var marker, i;
+                                var image1 = '/Users/deepakkumar/Documents/PhoneGapProject/Pinpoint_Phonegap/Pinpoint_Phonegap/pin.png';
+                                var image2 = '/Users/deepakkumar/Documents/PhoneGapProject/Pinpoint_Phonegap/Pinpoint_Phonegap/location_background.png';
+                               var infowindow = new google.maps.InfoWindow();
+                               for (i = 0; i < infoArray.length; i++) 
+                                {  
+                                    marker = new google.maps.Marker({
+                                                               position: new google.maps.LatLng(infoArray[i][1], infoArray[i][2]),
+                                                               map: map,
+                                                               title: infoArray[i][0],
+                                                               icon:image1
+                                                               });
+                            
+//                                    marker.info = new google.maps.InfoWindow({
+//                                                                             //when I add <IMG BORDER="0" ALIGN="Left" SRC="stagleton.jpg"> the maps will not load
+//                                                                             content: <IMG ALIGN="Left" SRC=image2> "My name is "
+//                                                                             
+//                                                                             });    
+                                                          
+                               google.maps.event.addListener(marker,'click',(function(marker,i) {
+                                                                               return function() {
+                                                                               infowindow.setContent(infoArray[i][0]);
+                                                                    
+                                                                               //infowindow.icon:image1;
+                                                                               //infowindow.image : '/Users/deepakkumar/Documents/PhoneGapProject/Pinpoint_Phonegap/Pinpoint_Phonegap/pin.png'; 
+                                                                               infowindow.open(map, marker);
+                                                                              //  marker.info.open(map, marker);
+                                                                               
+                                                                               }
+                                                                               })(marker, i));
+                                    
+                                   
+                               }
+                                
+                        
+//                               }
+//                               });
                     }
-                    document.getElementById("myDiv").innerHTML=storesNameAtParticularZipcode[0];
                     
-                    for(i=0;i<addressForStore.length;i++)
-                    {
-                        storesAddressAtParticularZipcode[i] = addressForStore[i].childNodes[0].nodeValue;
-                    }
-                    document.getElementById("nameDiv").innerHTML = storesAddressAtParticularZipcode[0];
-                    
-                    alert("hello brother6");
-                } 
-            }    
-        }
-        
-        function displayURL()
-        {
-            for(var i=0;i<productImage.length;i++)
-            {
-                console.log(productImage[i]);
-            }
-        }
-        
-        function loadXMLDoc(imgId)
-        {
-            var xmlhttp;
-            if (window.XMLHttpRequest)
-            {
-                xmlhttp=new XMLHttpRequest();
-            }
-            else
-            {
-                xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-            }
-            xmlhttp.open("GET","http://www.supermarketapi.com/api.asmx/SearchByProductName?APIKEY=93da6ed905&ItemName=Apple",true);
-            xmlhttp.send();
-            
-            xmlhttp.onreadystatechange=function()
-            {
-                if (xmlhttp.readyState==4 && xmlhttp.status==200)
-                {
-                    var xmlDoc = xmlhttp.responseXML;
-                    storeImageForString = xmlDoc.getElementsByTagName("ItemImage");
-                    storeNameForString = xmlDoc.getElementsByTagName("Itemname");
-                    
-                    for (i=0;i<storeImageForString.length;i++)
-                    {
-                        productImage[i] = storeImageForString[i].childNodes[0].nodeValue;
-                    }
-                    document.getElementById("myDiv").innerHTML=productImage[5];
-                    
-                    for(i=0;i<storeNameForString.length;i++)
-                    {
-                        productTitle[i] = storeNameForString[i].childNodes[0].nodeValue;
-                    }
-                    console.log(productImage[5]);
-                    document.getElementById("nameDiv").innerHTML=productTitle[0];
-                    var img = document.getElementById(imgId);
-                    img.src = productImage[5];
-                }
-            }
-        }
-
-        
-        
-    	function onBodyLoad() 
-        {
-    		document.addEventListener("deviceready",onDeviceReady,false);
-    	}
-	
-    	function cbMapCallback() 
-        {
-    		alert(arguments[0]);
-    	}
-	
-        function onDeviceReady() 
-        {
-				
-    	}
-	
-    	var pins = [
-        { lat:49.281468,
-    			lon:-123.104446,
-    			title:"hello",
-    			pinColor:"purple", 
-    			selected:true
-    		},
-    		{ 
-                lat:49.28267206508114,
-    			lon:-123.09438228607178,
-    			title:"hi",
-    			pinColor:"green", 
-    			selected:false
-    		}
-      ]
-	
-    	function showMap() 
-        {
-          // do your thing!
-          var mapOptions = {
-          buttonCallback: "cbMapCallback",
-          height: 360,
-          diameter: 1000,
-          offsetTop: 25,
-          lat: pins[0].lat,
-          lon: pins[0].lon
-        };
-	
-    		window.plugins.mapKit.showMap();
-    		window.plugins.mapKit.setMapData(mapOptions);
-      	    window.plugins.mapKit.addMapPins(pins);		
-    	}
-	
-    	function hideMap() 
-        {
-    		window.plugins.mapKit.hideMap();
-    	}
-	
-    	function clearPins() 
-        {
-    	  window.plugins.mapKit.clearMapPins();
-    	}
-	
-    	function resizeMap() 
-        {
-    		var mapOptions = {
-    	    height:260
-        }
-    		window.plugins.mapKit.setMapData(mapOptions);
-    	}
-	
-    	function zoomIn() 
-        {
-    		var mapOptions = 
-            {
-    	    diameter: 30
-            }
-    		window.plugins.mapKit.setMapData(mapOptions);
-  		}
-    
-    </script>
-  </head>
-    <body onload="onBodyLoad()">
-        
-        <div>
-            <img id='imgId' height='100px' width='100px'>
-                </div>
-        
-        <button type="button" onclick= "loadXMLDoc('imgId')">Request data</button>
-        <button type="button" onclick= "displayURL()"> display url</button> 
-        <button type="button" onclick= "findStoresAtPresentLocation()">findStore</button>
-        <button type="button" onclick= "findStoresForZipcode()">findStoresAtZipcode</button>
-        
-        <div id="myDiv"> </div>
-        <div id="nameDiv"> </div>
-
-        
-  	<button style="top:400px;position:absolute;" onclick="showMap()">Show</button>
-  	<button style="left:63px;top:400px;position:absolute;" onclick="hideMap()">Hide</button>
-  	<button style="left:115px;top:400px;position:absolute;" onclick="resizeMap()">Shrink</button>
-  	<button style="left:175px;top:400px;position:absolute;" onclick="zoomIn()">Zoom</button>
-  	<button style="left:230px;top:400px;position:absolute;" onclick="clearPins()">Clear Pins</button>
-  </body>
-</html>
+                    $(document).ready(function() 
+                                      {
+                                        addMarkers();
+                                      });
+                    </script>
+            </head>
+            <body onload="initialize()">
+                <div id="basic-map" data-role="page">
+                    <div data-role="header" data-theme="b">
+                        <h1>Map Location</h1>
+                        <button type="button" onclick= "addMarkers()">Show Marker</button>
+                    </div>
+                    <div data-role="content">   
+                        <div class="ui-bar-c ui-corner-all ui-shadow" style="padding:1em;">
+                            <div id="map_canvas" style="height:350px;"></div>
+                        </div>
+                    </div>
+                </div>      
+            </body>
+        </html>
