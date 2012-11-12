@@ -412,6 +412,86 @@
 //              return ("infoArray");
           }
           
+          function findDistanceBetweenTwoPlaceUsingLatAndLong()
+          {
+              alert("hello");
+              var urlForCalculatindDistance = "http://maps.googleapis.com/maps/api/directions/json?origin=37.3970,-122.4183&destination="+infoArray[0][1]+","+infoArray[0][2]+"&sensor=false&mode=driving";
+              console.log("url are==="+urlForCalculatindDistance);
+              
+              
+              var xmlHttpForDistanceToStore;
+              if (window.XMLHttpRequest)
+              {
+                  xmlHttpForDistanceToStore = new XMLHttpRequest();
+              }
+              xmlHttpForDistanceToStore.open("GET",urlForCalculatindDistance,true);              
+              xmlHttpForDistanceToStore.send();
+              xmlHttpForDistanceToStore.onreadystatechange=function()
+              {
+                  if(xmlHttpForDistanceToStore.readyState==4 && xmlHttpForDistanceToStore.status==200)
+                  {
+                      alert("inside");
+                      var xmlToParseForDistance = xmlHttpForDistanceToStore.responseText;
+                      var parsedString = JSON.parse(xmlToParseForDistance);
+
+                      console.log("parsing string are:"+parsedString.routes[0].legs[0].distance.text);
+                  }
+              }
+          }
+          
+          function CheckAvailabilityAtURL(urlForCheckingAvailability1)
+          {
+              var xmlhttp;
+              if (window.XMLHttpRequest)
+              {
+                  xmlhttp=new XMLHttpRequest();
+              }
+              else
+              {
+                  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+              }
+              xmlhttp.open("GET",urlForCheckingAvailability1,true);
+              xmlhttp.send();
+           
+              
+              xmlhttp.onload=function()
+              {
+                 
+                      var xmlDoc = xmlhttp.responseXML;
+                      var items = xmlDoc.getElementsByTagName("Product");
+                      for (var c=0;c<items.length;c++)
+                      {
+                          var item = items.item(c);
+                          var itemName = item.getElementsByTagName("Itemname").item(0).text;
+                          var category = item.getElementsByTagName("ItemCategory").item(0).text;
+                          var thumbnail =  item.getElementsByTagName("ItemImage").item(0).text;
+                          var id =  item.getElementsByTagName("ItemID").item(0).text;
+
+                      console.log("arraya are : " +itemName);
+                      
+                  
+          }
+          }
+          }
+          
+          
+          function ProductAvailableAtStoreUsingStoreID()
+          {
+              alert("check availability");
+              var productArray = ['Apples','Gerber 100% Apple Juice - 32 Fl. Oz.','Gerber Apple Juice - 4-4 Fl. Oz.','Gerber Organic Apple Juice - 4-4 Fl. Oz.','Pedialyte Tetra/Brick Pk Apple Flavor - 4-6.8 Fl. Oz.','Gerber Finger Foods Fruit Wagon Wheels Apples - 1.48 Oz'];
+              
+              var storeIDArray = ['a995a35f8f','e6k3fjw215k'];
+              
+              for(var i= 0 ;i<storeIDArray.length;i++)
+              {
+                  for(var j=0; j<productArray.length; j++)
+                  {
+                      var urlForCheckingAvailability = "http://www.supermarketapi.com/api.asmx/SearchForItem?APIKEY=93da6ed905&StoreId="+storeIDArray[i]+"&ItemName="+productArray[j];
+                      console.log("url are checking = "+urlForCheckingAvailability);
+                      CheckAvailabilityAtURL(urlForCheckingAvailability);
+                  }
+              }
+          }
           
                 function plotPin()
                     {
@@ -439,6 +519,9 @@
                 <button type="button" onclick= "findStoresForZipcode()">findStoresAtZipcode</button>
                 <button type="button" onclick= "getLatAndLong()">GetLatAndLong</button>
                 <button type="button" onclick= "plotPin()">PlotPin</button>
+                <button type="button" onclick= "findDistanceBetweenTwoPlaceUsingLatAndLong()">GetDistance</button>
+                <button type="button" onclick= "ProductAvailableAtStoreUsingStoreID()">Check Availability</button>
+            
                 
                 <div id="myDiv"></div>
                 <div id="nameDiv"></div>
