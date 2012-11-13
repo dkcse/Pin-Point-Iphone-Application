@@ -22,10 +22,10 @@ $( '#five' ).bind( "pageshow", function(){
   console.log('page show');
 
     initializeMap();
-	findStoresUsingZipcode();
-    findDistanceBetweenTwoPlaceUsingLatAndLong();
-                  
-
+    //findZipCodeAtCurrentLocation();
+//  	findStoresUsingZipcode();
+    //SendLatAndLongForCalculatingDistance();
+    ProductAvailableAtStoreUsingStoreID();
 });
 
 
@@ -38,9 +38,6 @@ function initializeMap(){
  	console.log("Map was initialed.....");
                         
 }
-
-
-
 
 function findZipCodeAtCurrentLocation() {
 
@@ -60,9 +57,9 @@ function findZipCodeAtCurrentLocation() {
 	xmlHttpForStoreZipCode
 			.open(
 					"GET",
-					"http://maps.googleapis.com/maps/api/geocode/json?latlng=37.7,-117.2&sensor=false&sensor=false",
+					"http://maps.googleapis.com/maps/api/geocode/json?latlng=37.7953876,-122.4224529&sensor=false&sensor=false",
 					true);
-	
+	alert("hello1");
 	xmlHttpForStoreZipCode.send();
 
 	xmlHttpForStoreZipCode.onreadystatechange = function() {
@@ -74,29 +71,27 @@ function findZipCodeAtCurrentLocation() {
 			var parsedString = JSON.parse(xmlDocForZipcode);
 
 			console.log("Response string ==" + xmlDocForZipcode);
+            alert("Response string ==" + xmlDocForZipcode);
 			
 			
 
 			for ( var i = 0; i < 1; i++) {
-				zipCodeArray[i] = parsedString.results[i].address_components[5].long_name;
-				console.log("Zip Code Arrat === "+i+" ==  ---->"+parsedString.results[i].address_components[5].long_name);
+				zipCodeArray[i] = parsedString.results[i].address_components[7].long_name;
+				console.log("Zip Code Arrat === "+i+" ==  ---->"+parsedString.results[i].address_components[7].long_name);
 			}
+            alert("array are===="+zipCodeArray);
 		}
 	}
 }
-
 
 // arrays to store the data
 var storesNameAtParticularZipcode = new Array();
 var storesAddressAtParticularZipcode = new Array();
 var storesCityNameAtZipcode = new Array();
 
-
 function findStoresUsingZipcode() {
 
 	console.log('findStoresUsingZipcode');
-	
-	
 	storesNameAtParticularZipcode = [];
 	storesAddressAtParticularZipcode = [];
 	storesCityNameAtZipcode = [];
@@ -108,37 +103,27 @@ function findStoresUsingZipcode() {
 	} else {
 		xmlhttpForStoresAtZipcode = new ActiveXObject("Microsoft.XMLHTTP");
 	}
-
-
-
+    
 	// hard coded zip value....................
 
-	xmlhttpForStoresAtZipcode
-			.open(
+	xmlhttpForStoresAtZipcode.open(
 					"GET",
 					"http://www.supermarketapi.com/api.asmx/StoresByZip?APIKEY=93da6ed905&ZipCode=94109",
 					true);
 	
 	xmlhttpForStoresAtZipcode.send();
-
-
-
 	xmlhttpForStoresAtZipcode.onreadystatechange = function() {
 
 		if (xmlhttpForStoresAtZipcode.readyState == 4
 				&& xmlhttpForStoresAtZipcode.status == 200) {
-
-
+            
 			// parsing
 
 			var xmlDocForStores = xmlhttpForStoresAtZipcode.responseXML;
-
 			console.log("Response TEXT == "+xmlhttpForStoresAtZipcode.responseText);
-
 			storeName = xmlDocForStores.getElementsByTagName("Storename");
 			addressForStore = xmlDocForStores.getElementsByTagName("Address");
 			cityForStore = xmlDocForStores.getElementsByTagName("City");
-
 
 			console.log('storeName.length === '+ storeName.length);
 			console.log('addressForStore.length === '+ addressForStore.length);
@@ -153,8 +138,6 @@ function findStoresUsingZipcode() {
 			for (i = 0; i < addressForStore.length; i++) {
 				storesAddressAtParticularZipcode[i] = addressForStore[i].childNodes[0].nodeValue;
 			}
-
-			
 
 			for (i = 0; i < cityForStore.length; i++) {
 				storesCityNameAtZipcode[i] = cityForStore[i].childNodes[0].nodeValue;
@@ -249,10 +232,7 @@ function getLatAndLongFromUrl(urlOfStores) {
 				console.log("Latitude =====  "    + parsedString.Placemark[0].Point.coordinates[0]);
 				console.log("Longitude ===== "    + parsedString.Placemark[0].Point.coordinates[1]);
 
-			
-
 				var storeDescriptionArray = new Array();
-
 				storeDescriptionArray[0] = storeNameForLatAndLong;
 				storeDescriptionArray[1] = parsedString.Placemark[0].Point.coordinates[1];
 				storeDescriptionArray[2] = parsedString.Placemark[0].Point.coordinates[0];
@@ -354,42 +334,41 @@ function addMarkers(infoArray) {
 }
 
 
-function findDistanceBetweenTwoPlaceUsingLatAndLong()
+
+function findDistanceBetweenTwoPlaceUsingLatAndLong(storesLat,storesLong)
 {
-    console.log("hello");
-    alert("hello");
+    var urlForCalculatingDistance = "http://maps.googleapis.com/maps/api/directions/json?origin=37.3970,-122.4183&destination="+storesLat+","+storesLong+"&sensor=false&mode=driving";
+    alert("url are==="+urlForCalculatingDistance);
     
-//    alert(infoArray[0][1]);
-//    alert(infoArray[0][2]);
-//    
-//    var urlForCalculatindDistance = "http://maps.googleapis.com/maps/api/directions/json?origin=37.3970,-122.4183&destination="+infoArray[0][1]+","+infoArray[0][2]+"&sensor=false&mode=driving";
-//    console.log("url are==="+urlForCalculatindDistance);
-//    
-//    
-//    var xmlHttpForDistanceToStore;
-//    if (window.XMLHttpRequest)
-//    {
-//        xmlHttpForDistanceToStore = new XMLHttpRequest();
-//    }
-//    xmlHttpForDistanceToStore.open("GET",urlForCalculatindDistance,true);              
-//    xmlHttpForDistanceToStore.send();
-//    xmlHttpForDistanceToStore.onreadystatechange=function()
-//    {
-//        if(xmlHttpForDistanceToStore.readyState==4 && xmlHttpForDistanceToStore.status==200)
-//        {
-//            alert("inside");
-//            var xmlToParseForDistance = xmlHttpForDistanceToStore.responseText;
-//            var parsedString = JSON.parse(xmlToParseForDistance);
-//            
-//            console.log("parsing string are:"+parsedString.routes[0].legs[0].distance.text);
-//        }
-//    }
+    
+    var xmlHttpForDistanceToStore;
+    if (window.XMLHttpRequest)
+    {
+        xmlHttpForDistanceToStore = new XMLHttpRequest();
+    }
+    xmlHttpForDistanceToStore.open("GET",urlForCalculatingDistance,true);              
+    xmlHttpForDistanceToStore.send();
+    xmlHttpForDistanceToStore.onreadystatechange=function()
+    {
+        if(xmlHttpForDistanceToStore.readyState==4 && xmlHttpForDistanceToStore.status==200)
+        {
+            alert("inside");
+            var xmlToParseForDistance = xmlHttpForDistanceToStore.responseText;
+            var parsedString = JSON.parse(xmlToParseForDistance);
+            alert("parsing string are:"+parsedString.routes[0].legs[0].distance.text);
+        }
+    }
+}
+
+function SendLatAndLongForCalculatingDistance()
+{
+    findDistanceBetweenTwoPlaceUsingLatAndLong(37.00,-122.00);
 }
 
 
-
-function CheckAvailabilityAtURL(urlForCheckingAvailability1)
+function CheckAvailabilityAtURL(urlForCheckingAvailability,i,callback)
 {
+    var itemName
     var xmlhttp;
     if (window.XMLHttpRequest)
     {
@@ -399,48 +378,64 @@ function CheckAvailabilityAtURL(urlForCheckingAvailability1)
     {
         xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
     }
-    xmlhttp.open("GET",urlForCheckingAvailability1,true);
+
+   
+    xmlhttp.open("GET",urlForCheckingAvailability,true);
     xmlhttp.send();
-    
-    
-    xmlhttp.onload=function()
-    {
+    xmlhttp.onreadystatechange = function() {
         
-        var xmlDoc = xmlhttp.responseXML;
-        var items = xmlDoc.getElementsByTagName("Product");
-        for (var c=0;c<items.length;c++)
-        {
-            var item = items.item(c);
-            var itemName = item.getElementsByTagName("Itemname").item(0).text;
-            var category = item.getElementsByTagName("ItemCategory").item(0).text;
-            var thumbnail =  item.getElementsByTagName("ItemImage").item(0).text;
-            var id =  item.getElementsByTagName("ItemID").item(0).text;
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
+            var xmlDoc = xmlhttp.responseXML;
+            var items = xmlDoc.getElementsByTagName("Itemname");
+            itemName= items[0].childNodes[0].nodeValue;
             
-            console.log("array are : " +itemName);
-            
-            
+            if(itemName == 'NOITEM')
+            {
+                  callback(false,i);
+            }
+            else{
+                   callback(true,i);
+            }
         }
     }
+    
 }
-
+var noOfAvailableProducts = [];
 
 function ProductAvailableAtStoreUsingStoreID()
 {
-    alert("check availability");
     var productArray = ['Apples','Gerber 100% Apple Juice - 32 Fl. Oz.','Gerber Apple Juice - 4-4 Fl. Oz.','Gerber Organic Apple Juice - 4-4 Fl. Oz.','Pedialyte Tetra/Brick Pk Apple Flavor - 4-6.8 Fl. Oz.','Gerber Finger Foods Fruit Wagon Wheels Apples - 1.48 Oz'];
     
     var storeIDArray = ['a995a35f8f','e6k3fjw215k'];
-    
+                               
     for(var i= 0 ;i<storeIDArray.length;i++)
-    {
+    {   noOfAvailableProducts.push(0);
+       
         for(var j=0; j<productArray.length; j++)
         {
             var urlForCheckingAvailability = "http://www.supermarketapi.com/api.asmx/SearchForItem?APIKEY=93da6ed905&StoreId="+storeIDArray[i]+"&ItemName="+productArray[j];
-            console.log("url are checking = "+urlForCheckingAvailability);
-            CheckAvailabilityAtURL(urlForCheckingAvailability);
+            
+            CheckAvailabilityAtURL(urlForCheckingAvailability,i,function(available,index){
+                                      
+                    if(available){
+                            
+                        noOfAvailableProducts[index] = noOfAvailableProducts[index]+1;
+                                   alert(noOfAvailableProducts[index]);
+                                  
+                        }
+                       ShowPercentageOfAvailability();            
+        });
+                  
         }
     }
+
 }
 
+
+function ShowPercentageOfAvailability()
+{
+    alert(noOfAvailableProducts[0]);
+}
 
 
