@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title> XML Parsing</title>
+  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+	<meta charset="utf-8">
+
+
+	<!-- iPad/iPhone specific css below, add after your main css >  -->
+	<link rel="stylesheet" media="only screen and (max-device-width: 1024px)" href="ipad.css" type="text/css" />		
+	<link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="iphone.css" type="text/css" />		
+	
+	<!-- If your application is targeting iOS BEFORE 4.0 you MUST put json2.js from http://www.JSON.org/json2.js into your www directory and include it here -->
+	<script type="text/javascript" charset="utf-8" src="cordova-1.5.0.js"></script>
+        
+        <script type="text/javascript">
+            
+            var productImage = new Array();
+            var productTitle = new Array();
+            
+            function displayURL()
+            {
+                alert('hi');               
+                alert(productImage.length);
+                for(var i=0;i<productImage.length;i++){
+                    console.log(productImage[i]);
+                }
+            }
+        
+            function loadXMLDoc(imgId)
+            {
+                var xmlhttp;
+                if (window.XMLHttpRequest)
+                {
+                    // code for IE7+, Firefox, Chrome, Opera, Safari
+                    xmlhttp=new XMLHttpRequest();
+                }
+                else
+                {
+                    // code for IE6, IE5
+                    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.open("GET","http://www.supermarketapi.com/api.asmx/SearchByProductName?APIKEY=93da6ed905&ItemName=Apple",true);
+                xmlhttp.send();
+                
+                xmlhttp.onreadystatechange=function()
+                {
+                    if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                    {
+                        var xmlDoc = xmlhttp.responseXML;
+                 
+                        
+                        x = xmlDoc.getElementsByTagName("ItemImage");
+                        y = xmlDoc.getElementsByTagName("Itemname");
+                        
+                        for (i=0;i<x.length;i++)
+                        {
+                            productImage[i] = x[i].childNodes[0].nodeValue;
+                        }
+                        document.getElementById("myDiv").innerHTML=productImage[5];
+                        
+                        for (i=0;i<y.length;i++)
+                        {
+                            productTitle[i] = y[i].childNodes[0].nodeValue;
+                        }
+
+                        console.log(productImage[5]);
+                        document.getElementById("nameDiv").innerHTML=productTitle[0];
+                        var img = document.getElementById(imgId);
+                        img.src = productImage[5];
+                    }
+                }
+               
+            }
+            
+        
+            
+        </script>
+        
+  </head>
+    <body>
+        
+        <h2>AJAX</h2>
+        <div>
+            <img id='imgId' height='100px' width='100px'>
+        </div>  
+        
+        <button type="button" onclick="loadXMLDoc('imgId')">Request data</button>
+         <button type="button" onclick="displayURL()"> display url </button> 
+      
+            
+        <div id="myDiv"></div>
+        <div id ="nameDiv"> </div>
+       
+    </body>
+    </html>
