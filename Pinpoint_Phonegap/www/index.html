@@ -1,231 +1,223 @@
 <!DOCTYPE HTML>
 <html>
-<head>
-<title>Cross Platform</title>
-
-<script type="text/javascript" src="cordova-2.1.0.js"></script>
-
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<link rel="stylesheet"
-	href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
-
-<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-<script
-	src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
-
-
-      
-
-
-
-<link rel="stylesheet" type="text/css" href="css/style.css" />
-
-
-</head>
-<body>
-	
-	<!-- HOME SCREEN -->
-	<div data-role="page" id="homepage" >
-		
-		<div data-role="header" class="mainPage" data-position="fixed">
-			<img id="id_new_image" src="images/new_list_normal.png" class="addNewItemImage">	
-		</div>
-
-		<div data-role="content" class="mainBackground">
-		
-
-			<div id="noList" class="no_list">
-				<img src="images/arrow_smile_text.png" >
-			</div>  
-
-
-		 	<div  id="list" style="display:inline">
-			 	<ul id="id_ul"  data-role="listview" data-inset="true" style="margin-top:20%;">               
-     			
-     				<!-- The list is dynamically inflated -->
-
-     			</ul> 
-     		</div>
-
-
-<div id="content">
-
-	<div class="bubble_box">
-		<p class="bubble_percent">95%</p>
-		<p class="bubble_items">10/11 ITEMS</p>
-
-	</div>
-
-
-	<div class="bubble_data">
-		<p class="bubble_header">Aamir Shah</p>
-		<p class="bubble_miles"> 0.21 Miles </p>
-	</div>
-
-	
-</div>
-
-     	<h3>To be deleted later</h3>
-     		<a href="#oneB">page 1b</a>
-			<a href="#two">page 2</a>
-			<a href="#three">page 3</a>
-			<a href="#four">page 4</a>
-			<a href="#five">page 5</a>
-			<a href="#six">page 6 MAP</a>
-			<a href="#seven">page 7 store</a> 
-
-
-			
-		</div>
-		
-
-		
-	
-	</div> <!-- END of home page -->
-
-
-	<!-- Page 1b-->
-	<div data-role="page" id="oneB">
-
-		<div data-role="header" class="mainPage" data-position="fixed">
-			<img id="id_cancel" src="images/cancel_normal.png" class="view_list">
-		</div>
-
-		<div data-role="content" class="mainBackground">
-
-			<div class="center_label">
-				<label class="new_list">Name your new list</label>
-
-			</div>
-
-			<div class="list_text">
-				<input id="id_text_box" type="text"  />
-			</div>
-	
-			<div class="list_button">
-				<a id="id_create" href="#two" data-role="button" data-theme="e" data-icon="check" data-iconpos="right">Create</a>
-			</div>
-
-			
-		</div>
-
-	</div>
-
-
-<!-- Page #2 -->
-	<div data-role="page" id="two">
-
-		<!-- ACTION BAR -->
-		<div data-role="header" class="listHeader" data-position="fixed">	
-			<img id="id_view_list" src="images/view_list.png" class="view_list">
-			<img id="id_x_1" src="images/x_normal.png" class="x_image">
-			<div class="titleList">
-				<label id="page2_title">Dummy Data</label>
-			</div>
-		</div>
-
-		<!-- CONTENT -->		
-		 <div data-role="content" class="listBackground">
-			<div class="searchBox">
-				<input id="id_of_search_key" type="text" size="50" class="search_bg" placeholder="Search for items" />
-				<img id="search_id" src="images/search_go.png" class="search_text_box"/>
-			</div>
-			
-			
-		
-
-			<!-- There is no list just display the pic -->
-			<div id="search_noList">
-				<div class="gotta_find">
-					<img src="images/gotta_find.png" class="gotta">
-				</div> 
-			</div>  
-
-
-			<!-- Search was successful .... display the list and categories -->
-		 	<div  id="search_list" style="display:none">
-
-		 		<div class="smallOrangeBackground">
-					<div class="orangeBackground">		
-						<!-- will be dynamically added-->
-						<p id="total_matches"></p>
-					</div>
-
-					<div data-role="navbar">
-						<ul>
-							<li><a id="id_product" href="#" class="selected"  class="ui-btn-active ui-state-persist">Products</a></li>
-							<li><a id="id_category" class="normal" href="#">Categories</a></li>
-						</ul>
-					</div><!-- /navbar -->
-				</div> <!-- /orange background-->
-			
-				
-				<!-- Tab 1 -->
-		 		<div id="id_product_items" >
-					<!-- Products List View -->					
+    <head>
+        <title>Cross Platform</title>
+        
+        <script type="text/javascript" src="cordova-2.1.0.js"></script>
+        
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+            
+            <link rel="stylesheet"
+            href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+            
+            <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+            <script
+                src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+            
+            
+            
+    
+            <link rel="stylesheet" type="text/css" href="css/style.css" /> 
+            
+            
+    </head>
+    <body>
+        
+        <!-- HOME SCREEN -->
+        <div data-role="page" id="homepage" >
+            
+            <div data-role="header" class="mainPage" data-position="fixed">
+                <img id="id_new_image" src="images/new_list_normal.png" class="addNewItemImage">	
+                    </div>
+            
+            <div data-role="content" class="mainBackground">
+                
+                
+                <div id="noList" class="no_list">
+                    <img src="images/arrow_smile_text.png" >
+                        </div>  
+                
+                
+                <div  id="list" style="display:inline">
+                    <ul id="id_ul"  data-role="listview" data-inset="true" style="margin-top:20%;">               
+                        
+                        <!-- The list is dynamically inflated -->
+                        
+                    </ul> 
+                </div>
+                
+                
+                
+                
+                
+                
+                <h3>To be deleted later</h3>
+                
+                
+                <a href="#oneB">page 1b</a>
+                <a href="#two">page 2</a>
+                <a href="#three">page 3</a>
+                <a href="#four">page 4</a>
+                <a href="#five">page 5</a>
+                <a href="#six">page 6 MAP</a>
+                <a href="#seven">A/U page 7</a>
+                <a href="#eight">page 8 store</a> 
+                <a href="#ten"> scrollView</a>
+                
+                
+                
+            </div>
+            
+            
+            
+            
+        </div> <!-- END of home page -->
+        
+        
+        <!-- Page 1b-->
+        <div data-role="page" id="oneB">
+            
+            <div data-role="header" class="mainPage" data-position="fixed">
+                <img id="id_cancel" src="images/cancel_normal.png" class="view_list">
+                    </div>
+            
+            <div data-role="content" class="mainBackground">
+                
+                <div class="center_label">
+                    <label class="new_list">Name your new list</label>
+                    
+                </div>
+                
+                <div class="list_text">
+                    <input id="id_text_box" type="text"  />
+                </div>
+                
+                <div class="list_button">
+                    <a id="id_create" href="#two" data-role="button" data-theme="a" data-icon="check" data-iconpos="right">Create</a>
+                </div>
+                
+                
+            </div>
+            
+        </div>
+        
+        
+        <!-- Page #2 -->
+        <div data-role="page" id="two">
+            
+            <!-- ACTION BAR -->
+            <div data-role="header" class="listHeader" data-position="fixed">	
+                <img id="id_view_list" src="images/view_list.png" class="view_list">
+                    <img id="id_x_1" src="images/x_normal.png" class="x_image">
+                        <div class="titleList">
+                            <label id="page2_title">Dummy Data</label>
+                        </div>
+                        </div>
+            
+            <!-- CONTENT -->		
+            <div data-role="content" class="listBackground">
+                <div class="searchBox">
+                    <input id="id_of_search_key" type="text" size="50" class="search_bg" placeholder="Search for items" />
+                    <img id="search_id" src="images/search_go.png" class="search_text_box"/>
+                </div>
+                
+                
+                
+                
+                <!-- There is no list just display the pic -->
+                <!-- <div id="search_noList" style="display:none"> -->
+                <div id="search_noList"> 
+                    <div class="gotta_find">
+                        <img src="images/gotta_find.png" class="gotta">
+                            </div> 
+                </div>  
+                
+                
+                <!-- Search was successful .... display the list and categories -->
+                <div  id="search_list" style="display:none"> 
+                    
+                    <!-- <div  id="search_list"> -->
+                    
+                    <div class="smallOrangeBackground">
+                        <div class="orangeBackground">		
+                            <!-- will be dynamically added-->
+                            <p id="total_matches" style="color:white;"></p>
+                        </div>
+                        
+                        <div data-role="navbar">
+                            <ul>
+                                <li><a id="id_product" href="#" class="selected"  class="ui-btn-active ui-state-persist">PRODUCTS</a></li>
+                                <li><a id="id_category" class="normal" href="#">CATEGORIES</a></li>
+                            </ul>
+                        </div><!-- /navbar -->
+                    </div> <!-- /orange background-->
+                    
+                    
+                    <!-- Tab 1 -->
+                    <div id="id_product_items" >
+                        <!-- Products List View -->					
 						<ul id="product_list_view" data-role="listview" class="belowTabs">
-
+                            
 							<!-- The list view is inflated dynamically-->	
-
+                            
 						</ul>					
-				</div> 
-
-				<!-- Tab 2 -->
-				<div id="id_category_items" style="display:none;">
-
-					<ul id="category_list_view" data-role="listview" class="belowTabs">
-
-						<!-- The list view is inflated dynamically-->	
-						
-					</ul>
-				</div> 
-
-			 	
-     		</div>
-		</div>
- 
-
-	</div>
-
-
-
-	<!-- Page 3 is actually page 2 only -->
-
-	<!-- page #3-->
-
-	<div data-role="page" id="three">
-
-		<div data-role="header" class="listHeader">
-			
-			<img id="id_view_list_2" src="images/view_list.png" class="view_list">
-			<img id="id_x_2" src="images/x_normal.png" class="x_image">
-			<div class="titleList">
-				<label>Dummy Data</label>
-			</div>
-		</div>
-
-
-
-		 <div data-role="content" >
-			
-
-			<div class="smallOrangeBackground">
-				<div class="orangeBackground">
-					<input type="text" size="50" class="search_bg" />
-					<p>78 matches found</p>
-				</div>
-
-				<div data-role="navbar">
-					<ul>
-						<li><a id="id_product" href="#" class="ui-btn-active ui-state-persist">Products</a></li>
-						<li><a id="id_category" href="#">Categories</a></li>
-					</ul>
-				</div><!-- /navbar -->
-			</div> <!-- /orange background-->
-			
-		 	<div id="id_product_items" class="belowTabs">
+                    </div> 
+                    
+                    <!-- Tab 2 -->
+                    <div id="id_category_items" style="display:none;">
+                        
+                        <ul id="category_list_view" data-role="listview" class="belowTabs">
+                            
+                            <!-- The list view is inflated dynamically-->	
+                            
+                        </ul>
+                    </div> 
+                    
+                    
+                </div>
+            </div>
+            
+            
+        </div>
+        
+        
+        
+        <!-- Page 3 is actually page 2 only -->
+        
+        <!-- page #3-->
+        
+        <div data-role="page" id="three">
+            
+            <div data-role="header" class="listHeader">
+                
+                <img id="id_view_list_2" src="images/view_list.png" class="view_list">
+                    <img id="id_x_2" src="images/x_normal.png" class="x_image">
+                        <div class="titleList">
+                            <label>Dummy Data</label>
+                        </div>
+                        </div>
+            
+            
+            
+            <div data-role="content" >
+                
+                
+                <div class="smallOrangeBackground">
+                    <div class="orangeBackground">
+                        <input type="text" size="50" class="search_bg" />
+                        <p>78 matches found</p>
+                    </div>
+                    
+                    <div data-role="navbar">
+                        <ul>
+                            <li><a id="id_product" href="#" class="ui-btn-active ui-state-persist">Products</a></li>
+                            <li><a id="id_category" href="#">Categories</a></li>
+                        </ul>
+                    </div><!-- /navbar -->
+                </div> <!-- /orange background-->
+                
+                <div id="id_product_items" class="belowTabs">
 					<ul data-role="listview">
 						<li class="custom_listview_img_edge">
 							<img src="images/curl.png" />
@@ -240,224 +232,357 @@
 							<p class="secondText">second text</p>
 							<img class="rightside" src="images/add_item_normal.png" />
 						</li>
-
+                        
 						<li class="custom_listview_img_edge">
 							<img src="images/curl.png" />
 							<p class="firstText">AAMIR Shah</p>
 							<p class="secondText">second text</p>
 							<img class="rightside" src="images/add_item_normal.png" />
 						</li>
-
-					
+                        
+                        
 					</ul>
-			</div> 
-
-			<div id="id_category_items" class="categories" style="display:none;">
-
+                </div> 
+                
+                <div id="id_category_items" class="categories" style="display:none;">
+                    
 					<ul data-role="listview">
 						<li class="custom_listview_img_category">
 							<p class="category_text_align">JUICE</p>
 							<img class="category_img_align" src="images/add_item_normal.png">	
-						</li>
+                                </li>
 						
 						<li class="custom_listview_img_category">
 							<p class="category_text_align">JUICE</p>
 							<img class="category_img_align" src="images/add_item_normal.png">	
-						</li>
-
+                                </li>
+                        
 						<li class="custom_listview_img_category">
 							<p class="category_text_align">JUICE</p>
 							<img class="category_img_align" src="images/add_item_normal.png">	
-						</li>
+                                </li>
 					</ul>
-
-			</div> 
-			
-		</div>
-	</div>
-
-
-
-	<!-- Page #4-->
-	<div data-role="page" id="four">
-
-		<div data-role="header" class="listHeader" data-position="fixed">
-			
-			<img id="id_all_list" src="images/all_lists_normal.png" class="view_list">
-			<img id="id_x_3" src="images/x_normal.png" class="x_image">
-			<div class="titleList">
-				<label id="page_title">TITLE hello</label>
-			</div>
-
-			<img id="id_new_products" src="images/add_products_normal.png" class="addNewItemImage_page4">
-			<img id="id_stores" src="images/find_store_normal.png" class="addNewItemImageMargin">
-		</div>
-
-		 <div data-role="content" class="mainBackground">
-		
-			<div class="total_items_in_list">
-				<p id="total_items_counter" class="display_in_bold"> 
+                    
+                </div> 
+                
+            </div>
+        </div>
+        
+        
+        
+        <!-- Page #4-->
+        <div data-role="page" id="four">
+            
+            <div data-role="header" class="listHeader" data-position="fixed">
+                
+                <img id="id_all_list" src="images/all_lists_normal.png" class="view_list">
+                    <img id="id_x_3" src="images/x_normal.png" class="x_image">
+                        <div class="titleList">
+                            <label id="page_title">TITLE hello</label>
+                        </div>
+                        
+                        <img id="id_new_products" src="images/add_products_normal.png" class="addNewItemImage_page4">
+                            <img id="id_find_stores" src="images/find_store_normal.png" class="addNewItemImageMargin">
+                                </div>
+            
+            <div data-role="content" class="mainBackground">
+                
+                <div class="total_items_in_list">
+                    <p id="total_items_counter" class="display_in_bold"> 
 					<!-- will be inflated Dynamically in the query for items in the list function -->
-				</p>
-			</div>
-
-			<div class="all_lists">
-
+                    </p>
+                </div>
+                
+                <div class="all_lists">
+                    
 					<!-- MASTER LIST -->
 					<ul id="master_list" data-role="listview">
 						
 						<!-- The list is dynamically inflated-->
-					
+                        
 					</ul>
-
-			</div> 
-
-
-
-			
-			
-		</div>
- 
-
-	</div>
-
-<!-- Page #5 -->
-	<div data-role="page" id="five">
-
-		<div data-role="header" class="listHeader">
-			
-			<img id="id_view_list_page5"src="images/view_list.png" class="view_list">
-			<img id="id_x_4" src="images/x_normal.png" class="x_image">
-			<div class="titleList">
-				<label>Page five</label>
-			</div>
-		</div>
-
-		 <div data-role="content" >
-
-		 	<div class="orange">
-			
-			<div class="tabs">
-				<div data-role="navbar">
-					<ul>
-						<li><a href="#" id="hi" class="selected" class="ui-btn-active ui-state-persist">Map</a></li>
-						<li><a href="#" id="hello" class="normal">List</a></li>
+                    
+                </div> 
+                
+                
+                
+                
+                
+            </div>
+            
+            
+        </div>
+        
+        <!-- Page #5 -->
+        <div data-role="page" id="five">
+            
+            <div data-role="header" class="listHeader" data-position="fixed">
+                
+                <img id="id_view_list_page5"src="images/view_list.png" class="view_list">
+                    <div class="titleList">
+                        <label>Select a Store</label>
+                    </div>
+                    </div>
+            
+            <div data-role="content" class="mainBackground">
+                
+                <div class="orange">
+                    
+                    <div class="tabs">
+                        <div data-role="navbar">
+                            <ul>
+                                <li><a href="#" id="show_map" class="selected" class="ui-btn-active ui-state-persist">Map</a></li>
+                                <li><a href="#" id="show_list" class="normal">List</a></li>
+                            </ul>
+                        </div><!-- /navbar -->
+                    </div>
+                </div> <!-- /orange background-->
+                
+                
+                
+                <!-- tab 1 -->
+                <div id="map_canvas" style="width:315px; height:367px">
+			 		<!-- Map is dynamically loaded here -->
+                </div>
+                
+                <!-- tab 2 -->
+                <div id="map_list_view" style="display:none;"> 
+                    
+                    <div class="mainBackground">
+                        
+                        <ul id="map_listview"  data-role="listview" data-inset="true" >               
+                            
+                            <!-- List is dynamically inflated -->
+                        </ul> 
+                    </div>
+                </div>
+                
+            </div>
+            
+            
+        </div>
+        
+        
+        <!-- Page #6 -->
+        <div data-role="page" id="six">
+            
+            <div data-role="header" class="listHeader" data-position="fixed">
+                
+                <img id="id_store" src="images/stores.png" class="view_list">
+                    
+                    <div class="titleList">
+                        <label id="label_store">iStore :)</label>
+                    </div>
+                    </div>
+            
+            <div data-role="content">
+                
+                <!-- Map View -->
+                <div id="mapBackground" class="map_background">		
+                    
+                    <!-- Map is loaded dynamically -->
+                    
+                </div>
+                
+                <!-- Store Details -->
+                <div class="storeBackground">
+					<div class="store_text">
+						<p id="id_store_name" class="store_name"> Store Name </p>
+						<p id="id_store_address" class="store_addr">Store address will come here dynamically</p>
+					</div>
+                    
+					<p id="id_store_miles" class="stores_mile"> 0.2 miles away</p>
+                    
+					<div id="id_percent_box" class="store_small_box">
+						<p id="id_percentage" class="store_percent"> 95 %</p>
+						<p id="id_total_items" class="store_total_items">19/20 ITEMS</p>
+					</div>				
+                </div> 
+                
+            </div>
+            
+            
+            <!-- FOOTER -->
+            <div data-role="footer" data-position="fixed" class="footer">			
+				
+				<a data-role="none"  id="id_link_map" href="#"><img id="id_bottomLinkDirections" src="images/directions.png" class="bottomLinkDirections"></a>
+                
+				<img id="id_bottomLinkCheckin" src="images/checkin.png" class="bottomLinkCheckin">			
+                    </div>
+            
+            
+        </div>
+        
+        
+        <!-- Page #7  sililar to page 4 -->
+        <div data-role="page" id="seven">
+            
+            <div data-role="header" class="listHeader" data-position="fixed">
+                
+                <img id="id_back_to_store" src="images/back.png" class="view_list">
+                    
+                    <div class="titleList">
+                        <label>What's Avaiable</label>
+                    </div>
+                    </div>
+            
+            <div data-role="content" class="mainBackground">
+                
+                <div class="orange">
+                    
+                    <div class="tabs">
+                        <div data-role="navbar">
+                            <ul>
+                                <li><a href="#" id="show_available" class="selected" class="ui-btn-active ui-state-persist">AVAILABLE</a></li>
+                                <li><a href="#" id="show_unavailable" class="normal">UNAVAILABLE</a></li>
+                            </ul>
+                        </div><!-- /navbar -->
+                    </div>
+                </div> <!-- /orange background-->
+                
+                
+                
+                <!-- tab 1 -->
+                <div id="list_show_available">
+			 		<!-- List is dynamically loaded here -->
+                    
+			 		<!-- MASTER LIST -->
+					<ul id="master_list_avialable" data-role="listview">
+						
+						<!-- The list is dynamically inflated-->
+                        
+                        
+                        
+                        
 					</ul>
-				</div><!-- /navbar -->
-				</div>
-			</div> <!-- /orange background-->
-			
-
-
-			 <div id="map_canvas" style="width:310px; height:320px">
-
- 			</div>
-
-
-		</div>
- 
-
-	</div>
-
-
-	<!-- Page #6 -->
-	<div data-role="page" id="six">
-
-		<div data-role="header" class="listHeader">
-			
-			<img id="id_store" src="images/stores.png" class="view_list">
-			
-			<div class="titleList">
-				<label>iStore :)</label>
-			</div>
-		</div>
-
-		 <div data-role="content">
-			<div class="mapBackground">
-				
-				<p>aamir shah</p>
-			</div>
-			<div class="storeBackground">
-				<p>sourcebits</p>
-				
-			</div>
-			
-		</div>
-
-		<div data-role="footer" data-position="fixed" class="footer">
-			
-				<img id="id_bottomLinkDirections" src="images/directions.png" class="bottomLinkDirections">
-				<img id="id_bottomLinkCheckin" src="images/checkin.png" class="bottomLinkCheckin">
-			
-		</div>
- 
-
-	</div>
-
-
-	<!-- Page #7 -->
-	<div data-role="page" id="seven">
-
-		<div data-role="header" class="listHeader">
-			
-			<img id="id_back" src="images/back.png" class="view_list">
-			
-			<div class="titleList">
-				<label>Sbits's</label>
-			</div>
-		</div>
-
-		 <div data-role="content">
-		 	<img src="images/store_overview_header.png" class="store_overview">
-		
-			<div  class="img_front">
-				<img src="images/front_inactive.png">	
-			</div>
-
-			<div class="img_back">
-				<img src="images/back_inactive.png" >	
-			</div>
-
-			<div class="box">
-				<div class="img_center">
-					<img src="images/aisle_inactive.png" >
-					<img src="images/aisle_inactive.png" >
-					<img src="images/aisle_inactive.png" >
-					<img src="images/aisle_inactive.png" >
-				</div>
-			
-				<div class="img_center">
-					<img src="images/aisle_inactive.png" >
-					<img src="images/aisle_inactive.png" >
-					<img src="images/aisle_inactive.png" >
-					<img src="images/aisle_inactive.png" >
-				</div>
-
-				<div class="img_center">
-					<img src="images/aisle_inactive.png" >
-					<img src="images/aisle_inactive.png" >
-					<img src="images/aisle_inactive.png" >
-					<img src="images/aisle_inactive.png" >
-				</div>
-
-				<div class="img_center">
-					<img src="images/aisle_inactive.png" >
-					<img src="images/aisle_inactive.png" >
-					<img src="images/aisle_inactive.png" >
-					<img src="images/aisle_inactive.png" >
-				</div>
-			</div>
-		
-			<img src="images/left_inactive.png" class="img_left">	
-
-			<img src="images/right_inactive.png" class="img_right">	
-
-		</div>
-	</div>
-
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-<script type="text/javascript" src="js/infoBubble.js"></script>
-<script type="text/javascript" src="js/funtionalities.js"></script>
-<script type="text/javascript" src="js/maps.js"></script>
-</body>
+                    
+                    
+                    
+                    
+                </div>
+                
+                <!-- tab 2 -->
+                <div id="list_show_unavailable" style="display:none;">
+                    
+                    <ul id="master_list_un_avialable" data-role="listview">
+                        
+                    </ul> 
+                    
+                </div>
+                
+            </div>
+            
+            
+        </div>
+        
+        
+        
+        
+        <!-- Page #8 -->
+        <div data-role="page" id="eight">
+            
+            <div data-role="header" class="listHeader">
+                
+                <img id="id_back" src="images/back.png" class="view_list">
+                    
+                    <div class="titleList">
+                        <label>Sbits's</label>
+                    </div>
+                    </div>
+            
+            <div data-role="content">
+                <img src="images/store_overview_header.png" class="store_overview">
+                    
+                    <div  class="img_front">
+                        <img id="asileFront" src="images/front_inactive.png">	
+                            </div>
+                    
+                    <div class="img_back">
+                        <img id="asileBack" src="images/back_inactive.png" >	
+                            </div>
+                    
+                    <div class="box">
+                        <div class="img_center">
+                            <img id="asile1" src="images/aisle_inactive.png" >
+                                <img id="asile2" src="images/aisle_inactive.png" >
+                                    <img id="asile3" src="images/aisle_inactive.png" >
+                                        <img id="asile4" src="images/aisle_inactive.png" >
+                                            <img id="asile5" src="images/aisle_inactive.png" >
+                                                </div>
+                        
+                        <div class="img_center">
+                            <img id="asile6" src="images/aisle_inactive.png" >
+                                <img id="asile7" src="images/aisle_inactive.png" >
+                                    <img id="asile8" src="images/aisle_inactive.png" >
+                                        <img id="asile9" src="images/aisle_inactive.png" >
+                                            <img id="asile10" src="images/aisle_inactive.png" >
+                                                </div>
+                        
+                        <div class="img_center">
+                            <img id="asile11" src="images/aisle_inactive.png" >
+                                <img id="asile12" src="images/aisle_inactive.png" >
+                                    <img id="asile13" src="images/aisle_inactive.png" >
+                                        <img id="asile14" src="images/aisle_inactive.png" >
+                                            <img id="asile15" src="images/aisle_inactive.png" >
+                                                </div>
+                        
+                        <div class="img_center">
+                            <img id="asile16" src="images/aisle_inactive.png" >
+                                <img id="asile17" src="images/aisle_inactive.png" >
+                                    <img id="asile18" src="images/aisle_inactive.png" >
+                                        <img id="asile19" src="images/aisle_inactive.png" >
+                                            <img id="asile20" src="images/aisle_inactive.png" >
+                                                </div>
+                    </div>
+                    
+                    
+                    <img id="asileLeft" src="images/left_inactive.png" class="img_left">	
+                        
+                        <img id="asileRight" src="images/right_inactive.png" class="img_right">	
+                            
+                            </div>
+        </div>
+        
+        
+        
+        <!-- Page #9  sililar to page 4 -->
+        <div data-role="page" id="nine">
+            
+            <div data-role="header" class="listHeader" data-position="fixed">
+                
+                <img id="id_back_to_store" src="images/back.png" class="view_list">
+                    
+                    <div class="titleList">
+                        <label>What's Avaiable</label>
+                    </div>
+                    </div>
+            
+            <div data-role="content" class="mainBackground">
+                
+		 		<h1>LAST ONE</h1>
+                
+            </div>
+            
+            
+        </div>
+        
+        <div data-role="page" id="ten">
+            
+        <div data-role="header" class="listHeader" data-position="fixed">
+        </div>
+            <div data-role="content" class="mainBackground">
+                <h1>last page</h1>
+                <div class="scrollView"><h1>lalala</h1><p style = "margin:10px;padding:5px;border:2px solid #666;width:1000px;height:1000px;">Hello</p></div>
+                
+            </div>
+        </div>
+        
+        
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+        <script type="text/javascript" src="js/infoBubble.js"></script>
+        <script type="text/javascript" src="js/funtionalities.js"></script>
+        <script type="text/javascript" src="js/maps.js"></script>
+        
+    </body>
 </html>
+

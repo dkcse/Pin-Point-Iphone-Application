@@ -446,8 +446,8 @@
 					armv6,
 					"$(ARCHS_STANDARD_32_BIT)",
 				);
-				CODE_SIGN_IDENTITY = "iPhone Developer: Ankur Dhanuka (HAWR45Y3YX)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ankur Dhanuka (HAWR45Y3YX)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Rohit Singal (UGQKS7R3ZE)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Rohit Singal (UGQKS7R3ZE)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -462,9 +462,9 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
-				PROVISIONING_PROFILE = "0DACFEA6-6DD4-455F-9209-7623E993E947";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0DACFEA6-6DD4-455F-9209-7623E993E947";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -477,8 +477,8 @@
 					armv6,
 					"$(ARCHS_STANDARD_32_BIT)",
 				);
-				CODE_SIGN_IDENTITY = "iPhone Developer: Ankur Dhanuka (HAWR45Y3YX)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ankur Dhanuka (HAWR45Y3YX)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Rohit Singal (UGQKS7R3ZE)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Rohit Singal (UGQKS7R3ZE)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_THUMB_SUPPORT = NO;
@@ -486,9 +486,9 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
-				PROVISIONING_PROFILE = "0DACFEA6-6DD4-455F-9209-7623E993E947";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0DACFEA6-6DD4-455F-9209-7623E993E947";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -509,6 +509,7 @@
 				);
 				GCC_THUMB_SUPPORT = NO;
 				INFOPLIST_FILE = "Pinpoint_Phonegap/Pinpoint_Phonegap-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					UIKit,
@@ -540,6 +541,7 @@
 				);
 				GCC_THUMB_SUPPORT = NO;
 				INFOPLIST_FILE = "Pinpoint_Phonegap/Pinpoint_Phonegap-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					UIKit,
