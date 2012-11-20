@@ -185,10 +185,6 @@ function insertRecord(name,total_items,upload_time) {
                    });
 }
 
-
-
-
-
 function updateTotalItems(list_name,items_count){
     console.log("Inside update function... () ....");
     
@@ -212,8 +208,6 @@ function updateTotalItems(list_name,items_count){
                    {
                    tx.executeSql(updateStatement, [items_count,updated_time],updationSucess, errorCB);
                    });
-    
-    
 }
 
 
@@ -349,7 +343,6 @@ function bufferData(){
 
 
 
-
 // Create the database (Populate the database)
 function tempPopulate(tx) {
     
@@ -389,7 +382,6 @@ function insertBufferRecords(arrayItemName , arrayItemCategory, arrayItemID,  ar
                    tx.executeSql(insertStatement, [ arrayItemName[i].childNodes[0].nodeValue,arrayItemCategory[i].childNodes[0].nodeValue,arrayItemID[i].childNodes[0].nodeValue, arrayItemImage[i].childNodes[0].nodeValue,arrayAisleNumber[i].childNodes[0].nodeValue],insertedBufferSucess, tempError);
                    }
                    });
-    
 }
 
 function insertedBufferSucess(){
@@ -458,7 +450,6 @@ function createListTable(){
     var db = window.openDatabase("Database", "1.0", "Pin Point", 200000);
     db.transaction(listPopulate, listError, listSuccess);
 }
-
 
 
 
@@ -1739,4 +1730,277 @@ $(function() {
          $.mobile.changePage('#six');
          });
   });
+
+
+/****************************************************** PAGE 8 *******************************************************************/
+// function to change the back pic on mouse over
+$(function() {
+  $("#id_back")
+  .mouseover(function() { 
+             $(this).attr('src',"images/back_pressed.png");
+             })
+  .mouseout(function() {
+            $(this).attr('src',"images/back.png");
+            })
+  .click(function(){
+         
+         $.mobile.changePage('#six');
+         });
+  });
+
+
+/** LAST PAGE  PAGE 9 **/
+$(".btn-slide").click(function(){
+                      $("#panel").slideToggle("slow");
+                      $("#not_panel").css('display','block');
+                      });
+
+
+$( '#nine' ).bind( "pageshow", function(){
+                  $("#panel").css('display','none');
+                  });
+
+
+$(function() {
+  $("#all_done")
+  .mouseover(function() { 
+             $(this).attr('src',"images/done_pressed.png");
+             })
+  .mouseout(function() {
+            $(this).attr('src',"images/done.png");
+            })
+  .click(function(){
+         $.mobile.changePage('#ten');
+         });
+  });
+
+$(function() {
+  $("#pulldown")
+  .mouseover(function() { 
+             $(this).attr('src',"images/pulldown_bar_pressed.png");
+             })
+  .mouseout(function() {
+            $(this).attr('src',"images/pulldown_bar.png");
+            })
+  .click(function(){
+         // click is already handled by panel
+         });
+  });
+
+
+/****************************************************** PAGE 10 *******************************************************************/
+
+// function to toggle the new list image
+// on click goto the oneB page
+$(function() {
+  $("#id_back_dashboard")
+  .mouseover(function() { 
+             $(this).attr('src',"images/dashboard_pressed.png");
+             })
+  .mouseout(function() {
+            $(this).attr('src',"images/dashboard.png");
+            })
+  .click(function(){
+         $.mobile.changePage('#homepage');
+         });
+  });
+
+
+
+$(function() {
+  $("#id_another_list")
+  .mouseover(function() { 
+             $(this).attr('src',"images/another_list_pressed.png");
+             })
+  .mouseout(function() {
+            $(this).attr('src',"images/another_list.png");
+            })
+  .click(function(){
+         $.mobile.changePage('#oneB');
+         });
+  });
+
+
+
+/********** GALLERY ******************/
+
+
+var allImagesArray = new Array();
+allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/184020063_100x100.jpg');
+allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/165020004_100x100.jpg');
+allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/165020022_100x100.jpg');
+/*allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/960023176_100x100.jpg');
+ allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/960043683_100x100.jpg');
+ allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/165090027_100x100.jpg');
+ allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/165090012_100x100.jpg');
+ allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/165050258_100x100.jpg');
+ allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/165050276_100x100.jpg');
+ allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/960018932_100x100.jpg');
+ allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/960046207_100x100.jpg');
+ allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/119020308_100x100.jpg');
+ allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/119030702_100x100.jpg');
+ allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/960048295_100x100.jpg');
+ */
+
+
+var allImageNameArray = new Array();
+
+allImageNameArray.push('apple');
+allImageNameArray.push('bottle');
+allImageNameArray.push('box');
+
+
+console.log('length== '+allImagesArray.length);
+console.log(' 0 % == '+0%allImagesArray.length);
+console.log(' 1 % == '+1%allImagesArray.length);
+console.log(' 2 % == '+2%allImagesArray.length);
+console.log(' 3 % == '+3%allImagesArray.length);
+console.log(' 4 % == '+4%allImagesArray.length);
+
+var i=-1;
+var cntr = -1;
+
+
+
+$('#left_image').attr('src',allImagesArray[0]);
+$('#active_image').attr('src',allImagesArray[1]);
+var tag_name = allImageNameArray[1];
+$('#right_image').attr('src',allImagesArray[2]);
+
+console.log('TAG NAME == '+tag_name);
+
+
+
+function swipedRight(){
+    
+    console.log('...................................................................................................... RIGHT SWIPE ')
+    console.log('swipedRight value of i== '+i);
+    
+    
+    // LEFT
+    $('#left_image').animate({'width': '0','margin-left': '100px'},300,function(){
+                             
+                             console.log('value of i== '+i);
+                             
+                             cntr = (i+2)%allImagesArray.length;
+                             cntr = Math.abs(cntr);
+                             console.log('COUNTER AT LEFT ==== '+cntr);
+                             
+                             $('#left_image').attr('src',allImagesArray[cntr]);
+                             $('#left_image').css('margin-left','-5px');
+                             $('#left_image').css('width','130px');
+                             });
+    
+    // CENTER
+    $('#active_image').animate({'width': '0','margin-left': '200px'},300,function(){
+                               
+                               cntr = (i+1)%allImagesArray.length;
+                               cntr = Math.abs(cntr);
+                               console.log('COUNTER AT CENTER ==== '+cntr);
+                               
+                               $('#active_image').attr('src',allImagesArray[cntr]);
+                               tag_name = allImageNameArray[cntr];
+                               console.log('TAG NAME == '+tag_name);
+                               
+                               $('#gallery_product_name').html(tag_name);
+                               
+                               $('#active_image').css('margin-left','99px');
+                               $('#active_image').css('width','130px');
+                               });
+    
+    // RIGHT
+    $('#right_image').animate({'width': '0','margin-left': '300px'},300,function(){
+                              
+                              cntr = i%allImagesArray.length;
+                              cntr = Math.abs(cntr);
+                              
+                              console.log('COUNTER AT RIGHT ==== '+cntr);
+                              
+                              $('#right_image').attr('src',allImagesArray[cntr]);
+                              $('#right_image').css('margin-left','193px');
+                              $('#right_image').css('width','130px');
+                              });
+    
+    // move to next image 
+    i++;
+}
+
+
+
+function swipedLeft(){
+    
+    console.log('...................................................................................................... LEFT SWIPE ')
+    console.log('swipedLeft value of i== '+i);
+    
+    
+    // LEFT
+    $('#left_image').animate({width: 'toggle'},300,function(){
+                             
+                             console.log('ZERO value of i== '+i);
+                             
+                             cntr = i%allImagesArray.length;
+                             console.log('COUNTER AT LEFT ==== '+cntr);
+                             
+                             $('#left_image').attr('src',allImagesArray[cntr]);
+                             $('#left_image').css('display','block');
+                             });
+    
+    // CENTER
+    $('#active_image').animate({width: 'toggle'},300,function(){
+                               
+                               cntr = (i+1)%allImagesArray.length;
+                               console.log('COUNTER AT CENTER ==== '+cntr);
+                               
+                               $('#active_image').attr('src',allImagesArray[cntr]);
+                               tag_name = allImageNameArray[cntr];
+                               console.log('TAG NAME == '+tag_name);
+                               $('#gallery_product_name').html(tag_name);
+                               
+                               $('#active_image').css('display','block');
+                               });
+    
+    // RIGHT
+    $('#right_image').animate({width: 'toggle'},300,function(){
+                              
+                              cntr = (i+2)%allImagesArray.length;
+                              console.log('COUNTER AT RIGHT ==== '+cntr);
+                              
+                              $('#right_image').attr('src',allImagesArray[cntr]);
+                              $('#right_image').css('display','block');
+                              });
+    
+    // move to next image
+    i++;
+}
+
+
+
+$("#gallery_div").swiperight(function() {  
+                             swipedRight(); 
+                             });
+
+
+$("#gallery_div").swipeleft(function() {
+                            swipedLeft();   
+                            });
+
+
+
+
+$("#down_swipe").bind('swipedown',function() {
+                      
+                      $("#panel").slideDown("slow");
+                      $("#not_panel").css('display','none');
+                      
+                      });
+
+
+$("#down_swipe").bind('swipeup',function() {
+                      $("#panel").slideUp("slow");
+                      $("#not_panel").css('display','block');
+                      });
+
+
+
+
 

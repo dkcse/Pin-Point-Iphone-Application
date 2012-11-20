@@ -1,12 +1,11 @@
 
 
-
-
 var currentLat = 37.7953876;
 var currentLong = -122.4224529;
 
 
-//var mapCenter = new google.maps.LatLng(defaultLat,defaultLong);
+
+
 var map;
 
 var zipCodeArray = new Array();
@@ -15,8 +14,8 @@ var infoArray = new Array();
 
 
 var mapOptions = {
-center: new google.maps.LatLng(37.7550, -122.4183),
-zoom: 12,
+center: new google.maps.LatLng(currentLat, currentLong),
+zoom: 15,
 mapTypeId: google.maps.MapTypeId.ROADMAP
 };
 
@@ -24,7 +23,9 @@ $( '#five' ).bind( "pageshow", function(){
                   
                   console.log('page show');
                   
-                  $.mobile.showPageLoadingMsg();
+                  $.mobile.showPageLoadingMsg("b", "Finding nearby stores...");
+                  
+                  
                   
                   var fromBackToStores = window.localStorage.getItem("fromBackToStores"); 
                   
@@ -494,6 +495,7 @@ function fetchSubListUnAvailableStoreSuccess(tx, results) {
       	$('#master_list_un_avialable').listview('refresh');
     }else{
       	//$('#master_list_un_avialable').empty();
+        $('#show_unavailable').html('UNAVAIABLE (0)');          
       	console.log('all are available');
     }
 }
@@ -700,7 +702,7 @@ function getTheDistanceTillStore(){
     
 	for(var i=0;i<s_latArray.length;i++){
         
-		var urlForCalculatingDistance = "http://maps.googleapis.com/maps/api/directions/json?origin=37.3970,-122.4183&destination="+s_latArray[i]+","+s_longArray[i]+"&sensor=false&mode=driving";
+		var urlForCalculatingDistance = 'http://maps.googleapis.com/maps/api/directions/json?origin='+currentLat+','+currentLong+'&destination='+s_latArray[i]+','+s_longArray[i]+'&sensor=false&mode=driving';
     	console.log(" urlForCalculatingDistance >>>>"+i+"<<<<  ==="+urlForCalculatingDistance);
         
         
@@ -1109,12 +1111,18 @@ function displayMarkers(){
 	var currentLocationImage = 'images/dot.png';
     
     
+    
+    
+    
 	// current location
 	marker = new google.maps.Marker({
-                                    position : new google.maps.LatLng(currentLat, currentLong),
+                                    position : new google.maps.LatLng(37.7953876, -122.4224529),
                                     map : map,
                                     icon : currentLocationImage
                                     });
+    
+    
+    
     
     
 	// add all the other markers
@@ -1152,7 +1160,7 @@ function displayMarkers(){
                       
                       infoBubble.open(map, marker99);
                       infoBubble
-                      .setContent('<div class="overlay"><div class="bubble_box" onclick="bubbleClicked()"><p class="bubble_percent">'+ window.localStorage.getItem(s_storeIdArray[i])+'%</p><p class="bubble_items">'+window.localStorage.getItem(s_storeIdArray[i]+'total')+'/'+productArray.length+' ITEMS'+'</p></div><div class="bubble_data"><p  id="bubble_id" class="bubble_header">'+s_nameArray[i]+'</p><p class="bubble_miles"> '+s_distanceArray[i]+'les AWAY</p></div></div>');
+                      .setContent('<div class="overlay"><div class="bubble_box" onclick="bubbleClicked()"><p class="bubble_percent">'+ window.localStorage.getItem(s_storeIdArray[i])+'%</p><p class="bubble_items">'+window.localStorage.getItem(s_storeIdArray[i]+'total')+'/'+productArray.length+' ITEMS'+'</p></div><div class="bubble_data"><p  id="bubble_id" class="bubble_header">'+s_nameArray[i]+'</p><p class="bubble_miles"> '+s_distanceArray[i]+' AWAY</p></div></div>');
                       
                       
                       window.localStorage.setItem("store_name",s_nameArray[i]);
@@ -1232,13 +1240,13 @@ $( '#six' ).bind( "pageshow", function(){
                  };
                  
                  map2 = new google.maps.Map(document.getElementById('mapBackground'),mapOptions2);
-                 
+                 var pinImage = 'images/pin.png';
                  var marker2 = new google.maps.Marker(
                                                       {
                                                       map : map2,
                                                       position : new google.maps.LatLng(window.localStorage.getItem("store_lat"), window.localStorage.getItem("store_long")),
                                                       draggable : false,
-                                                      // icon:pinImage
+                                                      icon:pinImage
                                                       });
                  
                  
@@ -1701,7 +1709,7 @@ $(function(){
                         $('#map_listview').empty();
                         
                         for(var i=0;i<s_storeIdArray.length;i++){
-                        $('#map_listview').append('<li class="custom_listview_img_listview"><div id="id_percent_box_listview" class="store_small_box_listview"><p id="id_percentage_listview" class="store_percent_listview">'+window.localStorage.getItem(s_storeIdArray[i])+'%</p><p id="id_total_items_listview" class="store_total_items_listview">'+window.localStorage.getItem(s_storeIdArray[i]+'total')+'/'+productArray.length+' ITEMS</p></div><div class="right_side_listview"><p id="click_row" class="name_listview">'+s_nameArray[i]+'</p><p class="miles_listview">'+s_distanceArray[i]+'les away</p><h6 id="index_id" style="display:none;">'+i+'</h6></div></li>');
+                        $('#map_listview').append('<li class="custom_listview_img_listview"><div id="id_percent_box_listview" class="store_small_box_listview"><p id="id_percentage_listview" class="store_percent_listview">'+window.localStorage.getItem(s_storeIdArray[i])+'%</p><p id="id_total_items_listview" class="store_total_items_listview">'+window.localStorage.getItem(s_storeIdArray[i]+'total')+'/'+productArray.length+' ITEMS</p></div><div class="right_side_listview"><p id="click_row" class="name_listview">'+s_nameArray[i]+'</p><p class="miles_listview">'+s_distanceArray[i]+' away</p><h6 id="index_id" style="display:none;">'+i+'</h6></div></li>');
                         }  
                         
                         $('#map_listview').listview('refresh');
@@ -1783,3 +1791,20 @@ $(function(){
 
 
 
+/****************** LAST PAGE ***************************/
+
+$('#id_overview').click(function(){
+                        $.mobile.changePage('#eight');
+                        });
+
+$('#drop_down').click(function(){
+                      
+                      alert('amir');
+                      $('#drawer').slideDown();
+                      });
+
+$('#clickme').click(function() {
+                    $('#book').slideDown('slow', function() {
+                                         // Animation complete.
+                                         });
+                    });
