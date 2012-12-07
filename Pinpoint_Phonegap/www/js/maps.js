@@ -1,16 +1,9 @@
-
+// Author :- Aamir Shah
 
 var currentLat = 37.7953876;
 var currentLong = -122.4224529;
 
-
-
-
 var map;
-
-var zipCodeArray = new Array();
-
-var infoArray = new Array();
 
 
 var mapOptions = {
@@ -23,46 +16,37 @@ $( '#five' ).bind( "pageshow", function(){
                   
                   console.log('page show');
                   
-                  $.mobile.showPageLoadingMsg("b", "Finding nearby stores...");
+                  //$.mobile.showPageLoadingMsg("a", "Finding nearby stores...");
+                  showLoading();
                   
                   
                   
                   var fromBackToStores = window.localStorage.getItem("fromBackToStores"); 
                   
-                  if ( fromBackToStores == 12345 ) {
-                  
+                  if ( fromBackToStores == 12345 ) {      
                   window.localStorage.setItem("fromBackToStores",111);
-                  $.mobile.hidePageLoadingMsg();
+                  //$.mobile.hidePageLoadingMsg();
+                  hideLoading();
                   }else{
-                  
                   initializeMap();
                   findZipCodeAtCurrentLocation();
-                  
-                  
+                  //direct();
                   }
-                  
-                  
-                  
-                  
                   });
 
 
 function initializeMap(){
+    console.log('initializeMap');
     
-	console.log('initializeMap');
+    map = new google.maps.Map(document.getElementById('map_canvas'),mapOptions);
     
- 	map = new google.maps.Map(document.getElementById('map_canvas'),mapOptions);
-    
- 	console.log("Map was initialed.....");
-    
-    
-    
+    console.log("Map was initialed.....");
 }
 
 var xmlHttpForStoreZipCode = new XMLHttpRequest();
 
 function getZip(){
-	
+    
     if (xmlHttpForStoreZipCode.readyState == 4
         && xmlHttpForStoreZipCode.status == 200) {
         
@@ -71,17 +55,10 @@ function getZip(){
         
         console.log("Response string ==" + xmlDocForZipcode);
         
-        
-        
-        
         var zipCodeAtCurrentLocation = parsedString.results[0].address_components[7].long_name;
         console.log('zipCodeAtCurrentLocation'+zipCodeAtCurrentLocation);
         
-        
-        
-        findStoresUsingZipcode(zipCodeAtCurrentLocation); 
-        
-        
+        findStoresUsingZipcode(zipCodeAtCurrentLocation);       
     }
 }
 
@@ -89,19 +66,19 @@ xmlHttpForStoreZipCode.onreadystatechange = getZip;
 
 
 function findZipCodeAtCurrentLocation() {
-	
-	console.log('findZipCodeAtCurrentLocation');
     
-	
-	xmlHttpForStoreZipCode
+    console.log('findZipCodeAtCurrentLocation');
+    
+    
+    xmlHttpForStoreZipCode
     .open(
           "GET",
           'http://maps.googleapis.com/maps/api/geocode/json?latlng='+currentLat+','+currentLong+'&sensor=false&sensor=false',
           false);
-	
-	xmlHttpForStoreZipCode.send();
     
-	
+    xmlHttpForStoreZipCode.send();
+    
+    
 }
 
 
@@ -111,7 +88,7 @@ var storesAddressAtParticularZipcode = new Array();
 var storesCityNameAtZipcode = new Array();
 var s_storeIdArray = new Array();
 
-var	xmlhttpForStoresAtZipcode = new XMLHttpRequest();
+var xmlhttpForStoresAtZipcode = new XMLHttpRequest();
 
 
 
@@ -140,7 +117,7 @@ function getTheStores() {
         for (var i = 0; i < id_stores.length; i++) {
             // ID
             s_storeIdArray.push(id_stores[i].childNodes[0].nodeValue);
-            console.log(s_storeIdArray[i]);	
+            console.log(s_storeIdArray[i]); 
             
             // Name
             storesNameAtParticularZipcode[i] = storeName[i].childNodes[0].nodeValue;
@@ -148,14 +125,12 @@ function getTheStores() {
             
             // Address
             storesAddressAtParticularZipcode[i] = addressForStore[i].childNodes[0].nodeValue;
-            console.log('storesAddressAtParticularZipcode  '+ i +' ==='+storesAddressAtParticularZipcode[i]);				
+            console.log('storesAddressAtParticularZipcode  '+ i +' ==='+storesAddressAtParticularZipcode[i]);       
             
             // City Name
             storesCityNameAtZipcode[i] = cityForStore[i].childNodes[0].nodeValue;
-            console.log('storesCityNameAtZipcode  '+ i +' ==='+storesCityNameAtZipcode[i]);		
+            console.log('storesCityNameAtZipcode  '+ i +' ==='+storesCityNameAtZipcode[i]);   
         }
-        
-        
         
         createStoreTable();
         
@@ -168,26 +143,45 @@ xmlhttpForStoresAtZipcode.onreadystatechange = getTheStores;
 
 function findStoresUsingZipcode(zipCodeAtCurrentLocation) {
     
-	console.log('findStoresUsingZipcode');
-	
-	s_storeIdArray = [];
-	storesNameAtParticularZipcode = [];
-	storesAddressAtParticularZipcode = [];
-	storesCityNameAtZipcode = [];
+    console.log('findStoresUsingZipcode');
     
-	
-	xmlhttpForStoresAtZipcode
+    s_storeIdArray = [];
+    storesNameAtParticularZipcode = [];
+    storesAddressAtParticularZipcode = [];
+    storesCityNameAtZipcode = [];
+    
+    
+    xmlhttpForStoresAtZipcode
     .open(
           "GET",
           "http://www.supermarketapi.com/api.asmx/StoresByZip?APIKEY=93da6ed905&ZipCode="+zipCodeAtCurrentLocation,
           false);
     
-	xmlhttpForStoresAtZipcode.send();
+    xmlhttpForStoresAtZipcode.send();
     
 }
 
 
 
+function direct() {
+    
+    console.log('findStoresUsingZipcode');
+    
+    s_storeIdArray = [];
+    storesNameAtParticularZipcode = [];
+    storesAddressAtParticularZipcode = [];
+    storesCityNameAtZipcode = [];
+    
+    
+    xmlhttpForStoresAtZipcode
+    .open(
+          "GET",
+          "http://www.supermarketapi.com/api.asmx/StoresByCityState?APIKEY=8d0d3a96c3&SelectedCity=San%20Francisco&SelectedState=CA",
+          false);
+    
+    xmlhttpForStoresAtZipcode.send();
+    
+}
 
 
 
@@ -219,25 +213,25 @@ function createStoreTable(){
 // Create the database (Populate the database)
 function storePopulate(tx) {
     
-  	console.log("storePopulate....()");
+    console.log("storePopulate....()");
     
-  	// Create table for each store.
-	for (var i = 0; i < s_storeIdArray.length; i++) {
+    // Create table for each store.
+    for (var i = 0; i < s_storeIdArray.length; i++) {
         
-		// table name should begin with alphabet
-		var store_table_name = "STORE_"+s_storeIdArray[i];
-      	console.log('STORE table to be created is ='+store_table_name);
+        // table name should begin with alphabet
+        var store_table_name = "STORE_"+s_storeIdArray[i];
+        console.log('STORE table to be created is ='+store_table_name);
         
         
         
-    	var dropListSQL = 'DROP TABLE IF EXISTS '+store_table_name;
-      	console.log(dropListSQL);
-      	tx.executeSql(dropListSQL);
+        var dropListSQL = 'DROP TABLE IF EXISTS '+store_table_name;
+        console.log(dropListSQL);
+        tx.executeSql(dropListSQL);
         
-      	var createStoreTableSQL = 'CREATE TABLE IF NOT EXISTS ' + store_table_name + '(id integer primary key autoincrement, storeItemName  , storeItemCategory, storeItemID,  storeItemImage, storeAisleNumber, storeQuantity,storeAvailable)';      																												
-      	console.log("createStoreTableSQL   ="+createStoreTableSQL);
+        var createStoreTableSQL = 'CREATE TABLE IF NOT EXISTS ' + store_table_name + '(id integer primary key autoincrement, storeItemName  , storeItemCategory, storeItemID,  storeItemImage, storeAisleNumber, storeQuantity,storeAvailable)';                                                              
+        console.log("createStoreTableSQL   ="+createStoreTableSQL);
         tx.executeSql(createStoreTableSQL);
-	}
+    }
 }
 
 
@@ -260,7 +254,7 @@ function storeSuccess() {
 
 
 
-function insertRecordInStore(nameOfStore, storeItemNameArray  , storeItemCategoryArray, storeItemIDArray,  storeItemImageArray, storeAisleNumberArray, storeQuantity,storeAvailableArray) {
+function insertRecordInStore(nameOfStore, storeItemNameArray  , storeItemCategoryArray, storeItemIDArray,  storeItemImageArray, storeAisleNumberArray, arrayStoreQuantity,storeAvailableArray) {
     console.log("Inserting into DB ....");
     
     var table_store = 'STORE_'+nameOfStore;
@@ -273,7 +267,7 @@ function insertRecordInStore(nameOfStore, storeItemNameArray  , storeItemCategor
     db.transaction(function(tx) 
                    {
                    for(var i=0;i<storeItemNameArray.length;i++){
-                   tx.executeSql(insertStatement, [storeItemNameArray[i]  , storeItemCategoryArray[i], storeItemIDArray[i],  storeItemImageArray[i], storeAisleNumberArray[i], storeQuantity,storeAvailableArray[i]],insertedStoreSucess, storeError);
+                   tx.executeSql(insertStatement, [storeItemNameArray[i]  , storeItemCategoryArray[i], storeItemIDArray[i],  storeItemImageArray[i], storeAisleNumberArray[i], arrayStoreQuantity[i],storeAvailableArray[i]],insertedStoreSucess, storeError);
                    }
                    });
 }
@@ -283,14 +277,11 @@ function insertRecordInStore(nameOfStore, storeItemNameArray  , storeItemCategor
 
 
 function insertedStoreSucess(){
-	
+    
     console.log('Inserted Successfully...');
     
 }
 
-
-
-/////////////////////////////////////////////////////////////////////////
 
 
 
@@ -310,7 +301,7 @@ function queryCategoriesInStoreTable(tx) {
     console.log("queryCategoriesInStoreTable(tx)");
     
     
-    var store_id = window.localStorage.getItem("store_id")
+    var store_id = window.localStorage.getItem("store_id");
     var store_full_name = 'STORE_'+store_id;
     window.localStorage.setItem("store_full_name",store_full_name);
     
@@ -360,16 +351,12 @@ function fetchSubListAvailableInStore(tx) {
         console.log('bufferCategoriesOfStore ['+i+'] === '+bufferCategoriesOfStore[i]);
     }
     
-    /* var arraySpliceIndex = bufferCategoriesOfStore.indexOf('null');
-     bufferCategoriesOfStore.splice(arraySpliceIndex,1);
-     
-     console.log('bufferCategoriesOfStore == AFTER REMOVING NULL ');
-     for(var i=0;i<bufferCategoriesOfStore.length;i++){
-     console.log('bufferCategoriesOfStore ['+i+'] === '+bufferCategoriesOfStore[i]);
-     }*/
+    
     
     // clear the previous UI
     $('#master_list_avialable').empty();
+    window.localStorage.setItem("a_count",0); 
+    
     
     for(var i=0;i<bufferCategoriesOfStore.length;i++){
         
@@ -394,27 +381,32 @@ function fetchSubListStoreSuccess(tx, results) {
     var len = results.rows.length;
     console.log('Total Sub items in this list  == '+len);
     
+    var a_count = window.localStorage.getItem("a_count");
+    a_count = parseInt(a_count) + len;
+    window.localStorage.setItem("a_count",a_count); 
+    
+    $('#show_available').html('AVAILABLE ('+a_count+')');
+    
     if(len != 0){
         
-      	console.log('category == '+results.rows.item(0).storeItemCategory);
+        console.log('category == '+results.rows.item(0).storeItemCategory);
         
-      	$('#master_list_avialable').append('<li class="categories_major"><p class="text_of_category_store">'+results.rows.item(0).storeItemCategory+'</p></li>');
+        $('#master_list_avialable').append('<li class="categories_major"><p class="text_of_category_store">'+results.rows.item(0).storeItemCategory+'</p></li>');
         
-      	for(var i=0;i<len;i++){                
-        	$('#master_list_avialable').append('<li class="custom_listview_img_edge_au"><img width="45" height="45" class="sub_category_img" src="'+results.rows.item(0).storeItemImage+'"/><h6 class="sub_category_name">'+results.rows.item(i).storeItemName+'</h6><p class="sub_category_quantity"> QTY :- ' + results.rows.item(i).storeQuantity + ' </p></li>');
-        	$('#show_available').html('AVAIABLE ('+len+')');
-      	}
+        for(var i=0;i<len;i++){                
+            $('#master_list_avialable').append('<li class="custom_listview_img_edge_au"><img width="45" height="45" class="sub_category_img" src="'+results.rows.item(i).storeItemImage+'"/><h6 class="sub_category_name">'+results.rows.item(i).storeItemName+'</h6><p class="sub_category_quantity"> QTY :- ' + results.rows.item(i).storeQuantity + ' </p></li>');
+            
+        }
         
-      	// after adding all the rows refresh the master list
-      	$('#master_list_avialable').listview('refresh');           
+        // after adding all the rows refresh the master list
+        $('#master_list_avialable').listview('refresh');           
         
-  	}else{
-  	    //$('#master_list_avialable').empty();
-  	}
+    }else{        
+        console.log('no items are  available for this iteration');
+    }
     
-  	// check un-available ITEMS
-    
-  	getUnAvaialableItemsInStore();
+    // check un-available ITEMS
+    getUnAvaialableItemsInStore();
 }
 
 
@@ -423,7 +415,6 @@ function fetchSubListStoreSuccess(tx, results) {
 
 
 // first call getAvaiable only then call this func()
-
 
 function getUnAvaialableItemsInStore(){
     // first call getAvaiable only then call this func() coz category array will be properly populated....
@@ -456,6 +447,7 @@ function fetchSubListUnAvailableInStore(tx) {
     
     // clear the previous UI
     $('#master_list_un_avialable').empty();
+    window.localStorage.setItem("u_count",0); 
     
     for(var i=0;i<bufferCategoriesOfStore.length;i++){
         
@@ -480,23 +472,29 @@ function fetchSubListUnAvailableStoreSuccess(tx, results) {
     var len = results.rows.length;
     console.log('Total Sub items in this list  == '+len);
     
+    var u_count = window.localStorage.getItem("u_count");
+    u_count = parseInt(u_count) + len;
+    window.localStorage.setItem("u_count",u_count); 
+    
+    
+    $('#show_unavailable').html('UNAVAILABLE ('+u_count+')');
+    
     if(len != 0){
         
-      	console.log('category == '+results.rows.item(0).storeItemCategory);
+        console.log('category == '+results.rows.item(0).storeItemCategory);
         
-      	$('#master_list_un_avialable').append('<li class="categories_major"><p class="text_of_category_store">'+results.rows.item(0).storeItemCategory+'</p></li>');
+        $('#master_list_un_avialable').append('<li class="categories_major"><p class="text_of_category_store">'+results.rows.item(0).storeItemCategory+'</p></li>');
         
-      	for(var i=0;i<len;i++){                
-        	$('#master_list_un_avialable').append('<li class="custom_listview_img_edge_au"><img width="45" height="45" class="sub_category_img" src="'+results.rows.item(0).storeItemImage+'"/><h6 class="sub_category_name">'+results.rows.item(i).storeItemName+'</h6><p class="sub_category_quantity"> QTY :- ' + results.rows.item(i).storeQuantity + ' </p></li>');
-            $('#show_unavailable').html('UNAVAIABLE ('+len+')');					
-      	}
+        for(var i=0;i<len;i++){                
+            $('#master_list_un_avialable').append('<li class="custom_listview_img_edge_au"><img width="45" height="45" class="sub_category_img" src="'+results.rows.item(i).storeItemImage+'"/><h6 class="sub_category_name">'+results.rows.item(i).storeItemName+'</h6><p class="sub_category_quantity"> QTY :- ' + results.rows.item(i).storeQuantity + ' </p></li>');
+            
+        }
         
-      	// after adding all the rows refresh the master list
-      	$('#master_list_un_avialable').listview('refresh');
+        // after adding all the rows refresh the master list
+        $('#master_list_un_avialable').listview('refresh');
     }else{
-      	//$('#master_list_un_avialable').empty();
-        $('#show_unavailable').html('UNAVAIABLE (0)');          
-      	console.log('all are available');
+        
+        console.log('all are available for this iteration');
     }
 }
 
@@ -508,24 +506,9 @@ function errorAU(err) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /******************************** DB ENDS ************************************/
+
+
 
 
 
@@ -545,48 +528,47 @@ function makeURLToGetLatLongOfAllStores() {
     
     
     
-	urlArray = [];
-	s_nameArray = [];
-	s_addrArray = [];
-	s_latArray=[];
-	s_longArray=[];
-	s_distanceArray = [];
+    urlArray = [];
+    s_nameArray = [];
+    s_addrArray = [];
+    s_latArray=[];
+    s_longArray=[];
+    s_distanceArray = [];
     
-	console.log('makeURLToGetLatLongOfAllStores');
+    console.log('makeURLToGetLatLongOfAllStores');
     
-	console.log(' IN FUNC storesNameAtParticularZipcode.length ==== '+ storesNameAtParticularZipcode.length);
+    console.log(' IN FUNC storesNameAtParticularZipcode.length ==== '+ storesNameAtParticularZipcode.length);
     
-	for ( var i = 0; i < storesNameAtParticularZipcode.length; i++) {
+    for ( var i = 0; i < storesNameAtParticularZipcode.length; i++) {
         
-		var storeNameForLatAndLong = storesNameAtParticularZipcode[i];
-		var storeCityForLatAndLong = storesCityNameAtZipcode[i];
-		var storeAddressForLatAndLong = storesAddressAtParticularZipcode[i];
+        var storeNameForLatAndLong = storesNameAtParticularZipcode[i];
+        var storeCityForLatAndLong = storesCityNameAtZipcode[i];
+        var storeAddressForLatAndLong = storesAddressAtParticularZipcode[i];
         
-		var urlForLatAndLong = 'http://maps.googleapis.com/maps/geo?output=json&q='
+        var urlForLatAndLong = 'http://maps.googleapis.com/maps/geo?output=json&q='
         + storeNameForLatAndLong + storeAddressForLatAndLong
         + storeCityForLatAndLong;
         
-		console.log('urlForLatAndLong === '+ i +'-------------->>>>  '+urlForLatAndLong);
+        console.log('urlForLatAndLong === '+ i +'-------------->>>>  '+urlForLatAndLong);
         
-		
-		urlArray.push(urlForLatAndLong);
-		s_nameArray.push(storeNameForLatAndLong);
-		s_addrArray.push(storeAddressForLatAndLong);
-	}
-    
-    
-	console.log("URL Length ==== "+urlArray.length);
-	for(var i=0;i<urlArray.length;i++){
         
-		console.log("URL ...........................................>>>>   ====="+urlArray[i]);
-		console.log("NAME ...........................................>>>>   ====="+s_nameArray[i]);
-		console.log("ADDR ...........................................>>>>   ====="+s_addrArray[i]);
+        urlArray.push(urlForLatAndLong);
+        s_nameArray.push(storeNameForLatAndLong);
+        //    s_addrArray.push(storeAddressForLatAndLong); // this is half addr 
+    }
+    
+    
+    console.log("URL Length ==== "+urlArray.length);
+    for(var i=0;i<urlArray.length;i++){
         
-	}
+        console.log("URL ...........................................>>>>   ====="+urlArray[i]);
+        console.log("NAME ...........................................>>>>   ====="+s_nameArray[i]);
+        // console.log("ADDR ...........................................>>>>   ====="+s_addrArray[i]);
+        
+    }
     
-    
-	// calling function....
-	getLatAndLongFromUrl();
+    // calling function....
+    getLatAndLongFromUrl();
     
     
 }
@@ -598,31 +580,34 @@ var xmlHttpForLatAndLongOfStore = new XMLHttpRequest();
 
 function addLatLongs(){
     
-	if (xmlHttpForLatAndLongOfStore.readyState == 4
-        && xmlHttpForLatAndLongOfStore.status == 200) {	
+    if (xmlHttpForLatAndLongOfStore.readyState == 4
+        && xmlHttpForLatAndLongOfStore.status == 200) { 
         
         
-		var xmlDocForZipcode = xmlHttpForLatAndLongOfStore.responseText;
-		console.log("RESPONSE TXT TO GET THE LAT LONG ====  "+xmlDocForZipcode);
+        var xmlDocForZipcode = xmlHttpForLatAndLongOfStore.responseText;
+        console.log("RESPONSE TXT TO GET THE LAT LONG ====  "+xmlDocForZipcode);
         
-		var parsedString = JSON.parse(xmlDocForZipcode);
+        var parsedString = JSON.parse(xmlDocForZipcode);
         
         
-		console.log('parsedString.Status.code == '+parsedString.Status.code);
+        console.log('parsedString.Status.code == '+parsedString.Status.code);
         
-		if(parsedString.Status.code==200){
+        if(parsedString.Status.code==200){
             
-			console.log(" Latitude ===== "    + parsedString.Placemark[0].Point.coordinates[1]);
-			console.log(" Longitude =====  "    + parsedString.Placemark[0].Point.coordinates[0]);
+            console.log(" Latitude ===== "    + parsedString.Placemark[0].Point.coordinates[1]);
+            console.log(" Longitude =====  "    + parsedString.Placemark[0].Point.coordinates[0]);
             
-			
-			s_latArray.push(parsedString.Placemark[0].Point.coordinates[1]);
-			s_longArray.push(parsedString.Placemark[0].Point.coordinates[0]);
+            //      alert('full addr ='+parsedString.Placemark[0].address);
+            s_addrArray.push(parsedString.Placemark[0].address);
+            s_latArray.push(parsedString.Placemark[0].Point.coordinates[1]);
+            s_longArray.push(parsedString.Placemark[0].Point.coordinates[0]);
             
-		}else{
-            alert('no lat long in the response for this store');
-		}
-	}
+            
+        }else{
+            //alert('no lat long in the response for this store');
+            console.log('no lat long in the response for this store');
+        }
+    }
 }
 
 xmlHttpForLatAndLongOfStore.onreadystatechange=addLatLongs;
@@ -631,48 +616,48 @@ xmlHttpForLatAndLongOfStore.onreadystatechange=addLatLongs;
 
 
 function getLatAndLongFromUrl() {
-	
-	console.log('getLatAndLongFromUrl');
-	
-	console.log("URL Length getLatAndLongFromUrl ==== "+urlArray.length);
     
-	for(var i=0;i<urlArray.length;i++){
+    console.log('getLatAndLongFromUrl');
+    
+    console.log("URL Length getLatAndLongFromUrl ==== "+urlArray.length);
+    
+    for(var i=0;i<urlArray.length;i++){
         
-		console.log("URL to which the query will be made ................getLatAndLongFromUrl...........................>>>>   ====="+urlArray[i]);
+        console.log("URL to which the query will be made ................getLatAndLongFromUrl...........................>>>>   ====="+urlArray[i]);
         
-		xmlHttpForLatAndLongOfStore.open("POST", urlArray[i], false);
+        xmlHttpForLatAndLongOfStore.open("POST", urlArray[i], false);
         
-		xmlHttpForLatAndLongOfStore.send();
+        xmlHttpForLatAndLongOfStore.send();
         
-	} // for loop
+    } // for loop
     
-	// display on console
-	for(var i=0;i<s_latArray.length;i++)	{
-		console.log("LAT getLatAndLongFromUrl.>>>>  "+s_latArray[i]);
-		console.log("LONG getLatAndLongFromUrl>>>>  "+s_longArray[i]);
-	}
-    
-    
-    
-	getTheDistanceTillStore();
+    // display on console
+    for(var i=0;i<s_latArray.length;i++)  {
+        console.log("LAT getLatAndLongFromUrl.>>>>  "+s_latArray[i]);
+        console.log("LONG getLatAndLongFromUrl>>>>  "+s_longArray[i]);
+    }
     
     
-	for(var i=0;i<s_distanceArray.length;i++){
-		console.log("DISTANCE are === "+i+"---->"+s_distanceArray[i]);
-	}
     
-	
+    getTheDistanceTillStore();
     
-	// construct the product array first....
-	constructProductArray();
     
-	// following are called in the query success
+    for(var i=0;i<s_distanceArray.length;i++){
+        console.log("DISTANCE are === "+i+"---->"+s_distanceArray[i]);
+    }
     
-	// productAvailableAtStoreUsingStoreID();
     
-	// alert('will call displayMarkers()');
-	// // calling function .......
-	// displayMarkers();
+    
+    // construct the product array first....
+    constructProductArray();
+    
+    // following are called in the query success
+    
+    // productAvailableAtStoreUsingStoreID();
+    
+    // alert('will call displayMarkers()');
+    // // calling function .......
+    // displayMarkers();
     
 }
 
@@ -700,16 +685,16 @@ xmlHttpForDistanceToStore.onreadystatechange=getDistance;
 
 function getTheDistanceTillStore(){
     
-	for(var i=0;i<s_latArray.length;i++){
+    for(var i=0;i<s_latArray.length;i++){
         
-		var urlForCalculatingDistance = 'http://maps.googleapis.com/maps/api/directions/json?origin='+currentLat+','+currentLong+'&destination='+s_latArray[i]+','+s_longArray[i]+'&sensor=false&mode=driving';
-    	console.log(" urlForCalculatingDistance >>>>"+i+"<<<<  ==="+urlForCalculatingDistance);
+        var urlForCalculatingDistance = 'http://maps.googleapis.com/maps/api/directions/json?origin='+currentLat+','+currentLong+'&destination='+s_latArray[i]+','+s_longArray[i]+'&sensor=false&mode=driving';
+        console.log(" urlForCalculatingDistance >>>>"+i+"<<<<  ==="+urlForCalculatingDistance);
         
         
-    	xmlHttpForDistanceToStore.open("POST",urlForCalculatingDistance,false);              
-	    xmlHttpForDistanceToStore.send();
-    	
-	}    
+        xmlHttpForDistanceToStore.open("POST",urlForCalculatingDistance,false);              
+        xmlHttpForDistanceToStore.send();
+        
+    }    
 }
 
 
@@ -727,7 +712,7 @@ var arrayStoreItemId = new Array();
 var arrayStoreItemImage = new Array();
 var arrayStoreItemAsile = new Array();
 var arrayAvailable = new Array();
-
+var arrayStoreQuantity = new Array();
 var unAvailableProductNameArray = new Array();
 
 var total_available=0;
@@ -736,7 +721,7 @@ var xmlhttpAvailability=new XMLHttpRequest();
 function availablityCheck() {
     
     if (xmlhttpAvailability.readyState == 4 && xmlhttpAvailability.status == 200) {
-		
+        
         
         
         var store_index = window.localStorage.getItem("store_index");
@@ -747,7 +732,7 @@ function availablityCheck() {
         
         
         var xmlDoc = xmlhttpAvailability.responseXML;
-        console.log("RESPONSE for availablityCheck === "+xmlDoc);
+        console.log("git RESPONSE for availablityCheck ");
         
         
         var item_name = xmlDoc.getElementsByTagName("Itemname")[0].childNodes[0].nodeValue;
@@ -767,12 +752,19 @@ function availablityCheck() {
             var product_name=window.localStorage.getItem("product_name");
             console.log(product_name +' NOT avaiable at store '+store_index);
             
+            var product_catg = window.localStorage.getItem("product_catg");
+            var product_url = window.localStorage.getItem("product_url");
+            var product_quant = window.localStorage.getItem("product_quant");
+            
+            
+            
             arrayStoreItemName.push(product_name);
-            arrayStoreItemCategory.push('null');
+            arrayStoreItemCategory.push(product_catg);
             arrayStoreItemId.push('null');
-            arrayStoreItemImage.push('null');
+            arrayStoreItemImage.push(product_url);
             arrayStoreItemAsile.push('null');
             arrayAvailable.push('no');
+            arrayStoreQuantity.push(product_quant);
             
             unAvailableProductNameArray.push(product_name);
             
@@ -789,7 +781,7 @@ function availablityCheck() {
             total_available++;                  
             // window.localStorage.setItem("total_available");
             //  var product_name=window.localStorage.getItem("product_name");
-            
+            var product_quant = window.localStorage.getItem("product_quant");
             
             arrayStoreItemName.push(item_name);
             arrayStoreItemCategory.push(item_category);
@@ -797,6 +789,7 @@ function availablityCheck() {
             arrayStoreItemImage.push(item_image);
             arrayStoreItemAsile.push(item_asile); 
             arrayAvailable.push('yes');
+            arrayStoreQuantity.push(product_quant);
         }            
     }
 }
@@ -804,14 +797,17 @@ function availablityCheck() {
 xmlhttpAvailability.onreadystatechange = availablityCheck;
 
 
-function checkAvailabilityAtURL(urlForCheckingAvailability,storeIndex,productName){
+function checkAvailabilityAtURL(urlForCheckingAvailability,storeIndex,productName,productCategory,productURL,productQuantity){
     
-	console.log("URL for avaiable == "+urlForCheckingAvailability);
+    console.log("URL for avaiable == "+urlForCheckingAvailability);
     
-	console.log("sub func  store index=== "+storeIndex);
+    console.log("sub func  store index=== "+storeIndex);
     
-	window.localStorage.setItem("store_index",storeIndex);
-	window.localStorage.setItem("product_name",productName);
+    window.localStorage.setItem("store_index",storeIndex);
+    window.localStorage.setItem("product_name",productName);
+    window.localStorage.setItem("product_catg",productCategory);
+    window.localStorage.setItem("product_url",productURL);
+    window.localStorage.setItem("product_quant",productQuantity);
     
     xmlhttpAvailability.open("GET",urlForCheckingAvailability,false);
     xmlhttpAvailability.send();
@@ -965,10 +961,13 @@ function errorUnavailable(err) {
 
 
 var productArray = new Array();
+var productCategoryArray = new Array();
+var productURLArray = new Array();
+var productQuantityArray = new Array();
 
 function constructProductArray(){
     
-	
+    
     var db = window.openDatabase("Database", "1.0", "Pin Point", 200000);     
     db.transaction(queryDataFromList, errorInList);
 }
@@ -978,12 +977,15 @@ function queryDataFromList(tx) {
     console.log("inside queryDataFromList(tx)");
     
     productArray = [];
+    productCategoryArray = [];
+    productURLArray = [];
+    productQuantityArray = [];
     
     var table_name = window.localStorage.getItem("title_of_list");
     console.log('table which was queried == '+table_name);
     
     
-    var queryListStatement = 'SELECT listItemName FROM '+table_name+';';
+    var queryListStatement = 'SELECT listItemName, listItemCategory, listQuantity, listItemImage FROM '+table_name+';';
     console.log('queryListStatement == '+ queryListStatement);
     
     tx.executeSql(queryListStatement, [], queryListStatementSuccess, errorInList);
@@ -1004,20 +1006,22 @@ function queryListStatementSuccess(tx, results) {
         console.log('NAME = '+i+'---->'+results.rows.item(i).listItemName);
         
         productArray.push(results.rows.item(i).listItemName);
-        
+        productCategoryArray.push(results.rows.item(i).listItemCategory);
+        productURLArray.push(results.rows.item(i).listItemImage);
+        productQuantityArray.push(results.rows.item(i).listQuantity);
     }
     
     
     
-	productAvailableAtStoreUsingStoreID();
+    productAvailableAtStoreUsingStoreID();
     
     
-    console.log('getUnAvailableItemDetails');
-    getUnAvailableItemDetails();
+    // console.log('getUnAvailableItemDetails');
+    // getUnAvailableItemDetails();
     
-	console.log('will call displayMarkers()');
-	// calling function .......
-	displayMarkers();
+    console.log('will call displayMarkers()');
+    // calling function .......
+    displayMarkers();
     
     
     
@@ -1039,14 +1043,6 @@ function errorInList(err) {
 
 /************** product array query ENDS ********************************************************/
 
-
-
-
-//var productArray = ['lyat','Gerber 100% Apple Juice - 32 Fl. Oz.','Gerber Apple Juice - 4-4 Fl. Oz.','Gerber Organic Apple Juice - 4-4 Fl. Oz.','Pedialyte Tetra/Brick Pk Apple Flavor - 4-6.8 Fl. Oz.','Gerber Finger Foods Fruit Wagon Wheels Apples - 1.48 Oz'];
-
-//var storeIDArray = ['a995a35f8f','e6k3fjw215k'];
-
-
 function productAvailableAtStoreUsingStoreID(){
     
     
@@ -1057,39 +1053,40 @@ function productAvailableAtStoreUsingStoreID(){
     for(var i= 0 ;i<s_storeIdArray.length;i++)
     {   
         
-    	arrayStoreItemName = [];
-		arrayStoreItemCategory = [];
-		arrayStoreItemId = [];
-		arrayStoreItemImage = [];
-		arrayStoreItemAsile = [];
- 		arrayAvailable = [];
- 		total_available =0;
+        arrayStoreItemName = [];
+        arrayStoreItemCategory = [];
+        arrayStoreItemId = [];
+        arrayStoreItemImage = [];
+        arrayStoreItemAsile = [];
+        arrayStoreQuantity = [];
+        arrayAvailable = [];
+        total_available =0;
         
         unAvailableProductNameArray = [];
         
         
         for(var j=0; j<productArray.length; j++){
             
-        	console.log('j loop = '+j+' times');
+            console.log('j loop = '+j+' times');
             
             var urlForCheckingAvailability = "http://www.supermarketapi.com/api.asmx/SearchForItem?APIKEY=93da6ed905&StoreId="+s_storeIdArray[i]+"&ItemName="+productArray[j];
             console.log("urlForCheckingAvailability == "+urlForCheckingAvailability);
             
-            checkAvailabilityAtURL(urlForCheckingAvailability,i,productArray[j]);
+            checkAvailabilityAtURL(urlForCheckingAvailability,i,productArray[j],productCategoryArray[j],productURLArray[j],productQuantityArray[j]);
             
         }
         
         console.log('inserting at '+s_storeIdArray[i]);
         
-        insertRecordInStore(s_storeIdArray[i], arrayStoreItemName  , arrayStoreItemCategory, arrayStoreItemId,  arrayStoreItemImage,arrayStoreItemAsile, '1',arrayAvailable);
-		
-		var percent=((total_available/productArray.length)*100);
-		percent = parseInt(percent);
+        insertRecordInStore(s_storeIdArray[i], arrayStoreItemName  , arrayStoreItemCategory, arrayStoreItemId,  arrayStoreItemImage,arrayStoreItemAsile, arrayStoreQuantity,arrayAvailable);
         
-		var totalItems = s_storeIdArray[i]+'total';
+        var percent=((total_available/productArray.length)*100);
+        percent = parseInt(percent);
         
-		window.localStorage.setItem(s_storeIdArray[i],percent);
-		window.localStorage.setItem(totalItems,total_available);
+        var totalItems = s_storeIdArray[i]+'total';
+        
+        window.localStorage.setItem(s_storeIdArray[i],percent);
+        window.localStorage.setItem(totalItems,total_available);
         
         
         
@@ -1106,16 +1103,16 @@ function displayMarkers(){
     
     
     
-	var marker, infoBubble;
-	var pinImage = 'images/pin.png';
-	var currentLocationImage = 'images/dot.png';
+    var marker, infoBubble;
+    var pinImage = 'images/pin.png';
+    var currentLocationImage = 'images/dot.png';
     
     
     
     
     
-	// current location
-	marker = new google.maps.Marker({
+    // current location
+    marker = new google.maps.Marker({
                                     position : new google.maps.LatLng(37.7953876, -122.4224529),
                                     map : map,
                                     icon : currentLocationImage
@@ -1125,7 +1122,7 @@ function displayMarkers(){
     
     
     
-	// add all the other markers
+    // add all the other markers
     for (var i = 0; i < s_latArray.length; i++) {
         
         var marker99 = new google.maps.Marker(
@@ -1137,7 +1134,7 @@ function displayMarkers(){
                                               icon:pinImage
                                               });
         
-		infoBubble = new InfoBubble({
+        infoBubble = new InfoBubble({
                                     map : map,
                                     padding : 0,
                                     backgroundColor : 'rgb(57,57,57)',
@@ -1149,8 +1146,8 @@ function displayMarkers(){
                                     arrowStyle : 0
                                     });
         
-		// associate each pin with a bubble
-    	google.maps.event
+        // associate each pin with a bubble
+        google.maps.event
         .addListener(
                      marker99,
                      'click',
@@ -1172,7 +1169,7 @@ function displayMarkers(){
                       window.localStorage.setItem("store_id",s_storeIdArray[i]);
                       
                       
-                      var totalItems = s_storeIdArray[i]+'total';																		
+                      var totalItems = s_storeIdArray[i]+'total';                                   
                       var s_items = window.localStorage.getItem(totalItems)+'/'+productArray.length+' ITEMS';
                       
                       var s_percent = window.localStorage.getItem(s_storeIdArray[i])+'%';
@@ -1191,7 +1188,8 @@ function displayMarkers(){
     }// end of for loop
     
     
-    $.mobile.hidePageLoadingMsg();
+    //$.mobile.hidePageLoadingMsg();
+    hideLoading();
     
     
 }
@@ -1202,20 +1200,20 @@ function displayMarkers(){
 
 
 function bubbleClicked(){
-	
-	var name=$('#bubble_id').text();
-	console.log(name);
+    
+    var name=$('#bubble_id').text();
+    console.log(name);
     
     
     
-	console.log("STORE NAME ---->"+window.localStorage.getItem("store_name"));
-	console.log("STORE Latitude ---->"+window.localStorage.getItem("store_lat"));
-	console.log("STORE Longitude ---->"+window.localStorage.getItem("store_long"));
-	console.log("STORE ADDRESS ---->"+window.localStorage.getItem("store_addr"));
+    console.log("STORE NAME ---->"+window.localStorage.getItem("store_name"));
+    console.log("STORE Latitude ---->"+window.localStorage.getItem("store_lat"));
+    console.log("STORE Longitude ---->"+window.localStorage.getItem("store_long"));
+    console.log("STORE ADDRESS ---->"+window.localStorage.getItem("store_addr"));
     
     
-	
-	$.mobile.changePage('#six');
+    
+    $.mobile.changePage('#six',{ transition: "slide"});
 }
 
 
@@ -1262,23 +1260,24 @@ $( '#six' ).bind( "pageshow", function(){
                  });
 
 
+$("#id_bottomLinkDirections").bind('tap',function() {     
+                                   $("#id_bottomLinkDirections").attr('src',"images/directions_pressed.png");      
+                                   });
 
 
 // function to change the directions pic on mouse over
 $(function() {
   $("#id_bottomLinkDirections")
-  .mouseover(function() { 
-             $(this).attr('src',"images/directions_pressed.png");
-             })
-  .mouseout(function() {
-            $(this).attr('src',"images/directions.png");
-            })
   .click(function(){
          
-         var googleUrl = "http://maps.google.com/maps?saddr=37.771068,-122.407402&daddr=" + window.localStorage.getItem("store_lat") + "," + window.localStorage.getItem("store_long");
+         var googleUrl = "http://maps.google.com/maps?saddr="+currentLat+","+currentLong+"&daddr=" + window.localStorage.getItem("store_lat") + "," + window.localStorage.getItem("store_long");
+         //var googleUrl = "http://maps.google.com/maps?f=q&saddr="+currentLat+","+currentLong+"&daddr=" + window.localStorage.getItem("store_lat") + "," + window.localStorage.getItem("store_long")+"&output=embed";
          console.log(googleUrl);
          
+         
+         
          $('#id_link_map').attr('href',googleUrl);
+         
          
          });
   });
@@ -1296,31 +1295,27 @@ $('#id_percent_box').click(function(){
                            console.log('goto avaiable/un-available, moving to page 7 page STORE ID =='+store_id);
                            
                            
-                           $.mobile.changePage('#seven');
+                           $.mobile.changePage('#seven',{ transition: "slide"});
                            
                            
                            });
 
+$("#id_bottomLinkCheckin").bind('tap',function() {      
+                                $("#id_bottomLinkCheckin").attr('src',"images/checkin_pressed.png");      
+                                });
 
+$( '#six' ).bind( "pagebeforeshow", function(){
+                 $("#id_store").attr('src',"images/stores.png");
+                 $("#id_bottomLinkCheckin").attr('src',"images/checkin.png");    
+                 $("#id_bottomLinkDirections").attr('src',"images/directions.png");
+                 });
 
 
 // function to change the checkin pic on mouse over
 $(function() {
   $("#id_bottomLinkCheckin")
-  .mouseover(function() { 
-             $(this).attr('src',"images/checkin_pressed.png");
-             })
-  .mouseout(function() {
-            $(this).attr('src',"images/checkin.png");
-            })
   .click(function(){
-         
-         $.mobile.changePage('#eight');
-         
-         
-         
-         
-         
+         $.mobile.changePage('#eight',{ transition: "slide"});
          });
   });
 
@@ -1341,8 +1336,7 @@ $( '#eight' ).bind( "pageshow", function(){
                    
                    
                    removeClickListeners();
-                   // tackle back otherwise PROBLEMS
-                   highlightTheImage();
+                   //highlightTheImage(); called inside removeClickListeners();s
                    });
 
 
@@ -1350,6 +1344,7 @@ $( '#eight' ).bind( "pageshow", function(){
 
 function removeClickListeners(){
     
+    console.log('REMOVED ALL CLICKS');
     $('#asile1').unbind('click');
     $('#asile2').unbind('click');
     $('#asile3').unbind('click');
@@ -1372,17 +1367,21 @@ function removeClickListeners(){
     $('#asile20').unbind('click');
     $('#asileBack').unbind('click');
     $('#asileFront').unbind('click');
-    $('#asileLeft').unbind('click');
+    //$('#asileLeft').unbind('click');
     $('#asileRight').unbind('click');
     
     
     
-    
+    // tackle back otherwise PROBLEMS
+    highlightTheImage();
     
     
 }
 
-
+function func(){
+    $.mobile.changePage('#nine',{ transition: "slide"});
+    console.log('FUNC click for 4');
+}
 
 
 
@@ -1397,230 +1396,323 @@ function highlightTheImage(){
                                                            });
     
     for(var i=0;i<uniqueAisleNumberArray.length;i++){
-    	console.log("UNIQUE ITEM AT "+i+"  IS ---->"+uniqueAisleNumberArray[i]);
+        console.log("UNIQUE ITEM AT "+i+"  IS ---->"+uniqueAisleNumberArray[i]);
     }
     
     for(var i = 0;i < uniqueAisleNumberArray.length; i++){
         
         var checkForAisleNumberForImageChange = uniqueAisleNumberArray[i];
+        console.log('Finding match FOR === '+checkForAisleNumberForImageChange);
         
         if(checkForAisleNumberForImageChange == "Aisle:1"){
             // change image at position 1;
-            $('#asile1').attr('src',"images/aisle.png");
+        	console.log('Added click for 1');
             
-            $('#asile1').click(function(){
-                               $.mobile.changePage('#nine');
-                               });
+            $('#asile1').bind('click',function(){
+                              console.log('CLICKED ON AISLE 1');
+                              $.mobile.changePage('#nine',{ transition: "slide"});
+                              });
+            
+            $('#asile1').attr('src',"images/aisle.png");
         }
         
-        if(checkForAisleNumberForImageChange == "Aisle:2"){
+        else if(checkForAisleNumberForImageChange == "Aisle:2"){
             // change image at position 2;
+        	console.log('Added click for 2');
+            
+            $('#asile2').bind('click',function(){
+                              console.log('CLICKED ON AISLE 2');
+                              $.mobile.changePage('#nine',{ transition: "slide"});
+                              });
+            
             $('#asile2').attr('src',"images/aisle.png");
             
-            $('#asile2').click(function(){
-                               $.mobile.changePage('#nine');
-                               });
         }
         
-        if(checkForAisleNumberForImageChange == "Aisle:3"){
+        else if(checkForAisleNumberForImageChange == "Aisle:3"){
             // change image at position 3;
-            $('#asile3').attr('src',"images/aisle.png");
+        	console.log('Added click for 3');
             
-            $('#asile3').click(function(){
-                               $.mobile.changePage('#nine');
-                               });
+            $('#asile3').bind('click',function(){
+                              console.log('CLICKED ON AISLE 3');
+                              $.mobile.changePage('#nine',{ transition: "slide"});
+                              });
+            
+            $('#asile3').attr('src',"images/aisle.png");
         }
         
-        if(checkForAisleNumberForImageChange == "Aisle:4"){
+        else if(checkForAisleNumberForImageChange == "Aisle:4"){
             // change image at position 4;
+        	console.log('Added click for 4');
+            
+            $('#asile4').bind('click',function(){
+                              console.log('CLICKED ON AISLE 4');
+                              $.mobile.changePage('#nine',{ transition: "slide"});
+                              });
+            
             $('#asile4').attr('src',"images/aisle.png");
             
-            $('#asile4').click(function(){
-                               $.mobile.changePage('#nine');
-                               });
         }
         
-        if(checkForAisleNumberForImageChange == "Aisle:5"){
+        else if(checkForAisleNumberForImageChange == "Aisle:5"){
             // change image at position 5;
+        	console.log('Added click for 5');
+            
+            $('#asile5').bind('click',function(){
+                              console.log('CLICKED ON AISLE 5');
+                              $.mobile.changePage('#nine',{ transition: "slide"});
+                              });
+            
             $('#asile5').attr('src',"images/aisle.png");
-            
-            $('#asile5').click(function(){
-                               $.mobile.changePage('#nine');
-                               });
         }
         
-        if(checkForAisleNumberForImageChange == "Aisle:6"){
+        else if(checkForAisleNumberForImageChange == "Aisle:6"){
             // change image at position 6;
+        	console.log('Added click for 6');
+            
+            $('#asile6').bind('click',function(){
+                              console.log('CLICKED ON AISLE 6');
+                              $.mobile.changePage('#nine',{ transition: "slide"});
+                              });
+            
             $('#asile6').attr('src',"images/aisle.png");
-            
-            $('#asile6').click(function(){
-                               $.mobile.changePage('#nine');
-                               });
         }
         
-        if(checkForAisleNumberForImageChange == "Aisle:7"){
+        else if(checkForAisleNumberForImageChange == "Aisle:7"){
+        	alert('7');
             // change image at position 7;
+        	console.log('Added click for 7');
+            
+            $('#asile7').bind('click',function(){
+                              console.log('CLICKED ON AISLE 7');
+                              $.mobile.changePage('#nine',{ transition: "slide"});
+                              });
+            
             $('#asile7').attr('src',"images/aisle.png");
-            
-            $('#asile7').click(function(){
-                               $.mobile.changePage('#nine');
-                               });
+            alert('7b');
         }
         
-        if(checkForAisleNumberForImageChange == "Aisle:8"){
+        else if(checkForAisleNumberForImageChange == "Aisle:8"){
             // change image at position 8;
-            $('#asile8').attr('src',"images/aisle.png");
+        	console.log('Added click for 8');
             
-            $('#asile8').click(function(){
-                               $.mobile.changePage('#nine');
-                               });
+            $('#asile8').bind('click',function(){
+                              console.log('CLICKED ON AISLE 8');
+                              $.mobile.changePage('#nine',{ transition: "slide"});
+                              });
+            
+            $('#asile8').attr('src',"images/aisle.png");
         }
         
-        if(checkForAisleNumberForImageChange == "Aisle:9"){
+        else if(checkForAisleNumberForImageChange == "Aisle:9"){
             // change image at position 9;
+        	console.log('Added click for 9');
+            
+            $('#asile9').bind('click',function(){
+                              console.log('CLICKED ON AISLE 9');
+                              $.mobile.changePage('#nine',{ transition: "slide"});
+                              });
+            
             $('#asile9').attr('src',"images/aisle.png");
             
-            $('#asile9').click(function(){
-                               $.mobile.changePage('#nine');
-                               });
         }
         
-        if(checkForAisleNumberForImageChange == "Aisle:10"){
+        else if(checkForAisleNumberForImageChange == "Aisle:10"){
             // change image at position 10;
+        	console.log('Added click for 10');
+            
+            $('#asile10').bind('click',function(){
+                               console.log('CLICKED ON AISLE 10');
+                               $.mobile.changePage('#nine',{ transition: "slide"});
+                               });
+            
             $('#asile10').attr('src',"images/aisle.png");
             
-            $('#asile10').click(function(){
-                                $.mobile.changePage('#nine');
-                                });
         }
         
-        if(checkForAisleNumberForImageChange == "Aisle:11"){
+        else if(checkForAisleNumberForImageChange == "Aisle:11"){
             // change image at position 11;
+        	console.log('Added click for 11');
+            
+            $('#asile11').bind('click',function(){
+                               console.log('CLICKED ON AISLE 11');
+                               $.mobile.changePage('#nine',{ transition: "slide"});
+                               });
+            
             $('#asile11').attr('src',"images/aisle.png");
             
-            $('#asile11').click(function(){
-                                $.mobile.changePage('#nine');
-                                });
         }
         
-        if(checkForAisleNumberForImageChange == "Aisle:12"){
+        else if(checkForAisleNumberForImageChange == "Aisle:12"){
             // change image at position 12;
+        	console.log('Added click for 12');
+            
+            $('#asile12').bind('click',function(){
+                               console.log('CLICKED ON AISLE 12');
+                               $.mobile.changePage('#nine',{ transition: "slide"});
+                               });
+            
             $('#asile12').attr('src',"images/aisle.png");
             
-            $('#asile12').click(function(){
-                                $.mobile.changePage('#nine');
-                                });
         }
         
-        if(checkForAisleNumberForImageChange == "Aisle:13"){
+        else if(checkForAisleNumberForImageChange == "Aisle:13"){
             // change image at position 13;
+        	console.log('Added click for 13');
+            
+            $('#asile13').bind('click',function(){
+                               console.log('CLICKED ON AISLE 13');
+                               $.mobile.changePage('#nine',{ transition: "slide"});
+                               });
+            
             $('#asile13').attr('src',"images/aisle.png");
             
-            $('#asile13').click(function(){
-                                $.mobile.changePage('#nine');
-                                });
         }
         
-        if(checkForAisleNumberForImageChange == "Aisle:14"){
+        else if(checkForAisleNumberForImageChange == "Aisle:14"){
             // change image at position 14;
+        	console.log('Added click for 14');
+            
+            $('#asile14').bind('click',function(){
+                               console.log('CLICKED ON AISLE 14');
+                               $.mobile.changePage('#nine',{ transition: "slide"});
+                               });
+            
             $('#asile14').attr('src',"images/aisle.png");
             
-            $('#asile14').click(function(){
-                                $.mobile.changePage('#nine');
-                                });
         }
         
-        if(checkForAisleNumberForImageChange == "Aisle:15"){
+        else if(checkForAisleNumberForImageChange == "Aisle:15"){
             // change image at position 15;
+        	console.log('Added click for 15');
+            
+            $('#asile15').bind('click',function(){
+                               console.log('CLICKED ON AISLE 15');
+                               $.mobile.changePage('#nine',{ transition: "slide"});
+                               });
+            
             $('#asile15').attr('src',"images/aisle.png");
             
-            $('#asile15').click(function(){
-                                $.mobile.changePage('#nine');
-                                });
         }
         
-        if(checkForAisleNumberForImageChange == "Aisle:16"){
+        else if(checkForAisleNumberForImageChange == "Aisle:16"){
             // change image at position 16;
+        	console.log('Added click for 16');
+            
+            $('#asile16').bind('click',function(){
+                               console.log('CLICKED ON AISLE 16');
+                               $.mobile.changePage('#nine',{ transition: "slide"});
+                               });
+            
             $('#asile16').attr('src',"images/aisle.png");
             
-            $('#asile16').click(function(){
-                                $.mobile.changePage('#nine');
-                                });
         }
         
-        if(checkForAisleNumberForImageChange == "Aisle:17"){
+        else if(checkForAisleNumberForImageChange == "Aisle:17"){
             // change image at position 17;
+        	console.log('Added click for 17');
+            
+            $('#asile17').bind('click',function(){
+                               console.log('CLICKED ON AISLE 17');
+                               $.mobile.changePage('#nine',{ transition: "slide"});
+                               });
             $('#asile17').attr('src',"images/aisle.png");
             
-            $('#asile17').click(function(){
-                                $.mobile.changePage('#nine');
-                                });
         }
         
-        if(checkForAisleNumberForImageChange == "Aisle:18"){
+        else if(checkForAisleNumberForImageChange == "Aisle:18"){
             // change image at position 18;
-            $('#asile18').attr('src',"images/aisle.png");
+        	console.log('Added click for 18');
             
-            $('#asile18').click(function(){
-                                $.mobile.changePage('#nine');
-                                });
+            $('#asile18').bind('click',function(){
+                               console.log('CLICKED ON AISLE 18');
+                               $.mobile.changePage('#nine',{ transition: "slide"});
+                               });
+            
+            $('#asile18').attr('src',"images/aisle.png");
         }
         
-        if(checkForAisleNumberForImageChange == "Aisle:19"){
+        else if(checkForAisleNumberForImageChange == "Aisle:19"){
             // change image at position 19;
+        	console.log('Added click for 19');
+            
+            $('#asile19').bind('click',function(){
+                               console.log('CLICKED ON AISLE 19');
+                               $.mobile.changePage('#nine',{ transition: "slide"});
+                               });
+            
             $('#asile19').attr('src',"images/aisle.png");
             
-            $('#asile19').click(function(){
-                                $.mobile.changePage('#nine');
-                                });
         }
         
-        if(checkForAisleNumberForImageChange == "Aisle:20"){
+        else if(checkForAisleNumberForImageChange == "Aisle:20"){
             // change image at position 20;
+        	console.log('Added click for 20');
+            
+            $('#asile20').bind('click',function(){
+                               console.log('CLICKED ON AISLE 20');
+                               $.mobile.changePage('#nine',{ transition: "slide"});
+                               });
+            
             $('#asile20').attr('src',"images/aisle.png");
             
-            $('#asile20').click(function(){
-                                $.mobile.changePage('#nine');
-                                });
         }
         
         
         // top down left right
         
-        if(checkForAisleNumberForImageChange == "Aisle:Right" || checkForAisleNumberForImageChange == "Aisle:NOAISLE" || checkForAisleNumberForImageChange == "Aisle:Right Center"){
+        else if(checkForAisleNumberForImageChange == "Aisle:Right" || checkForAisleNumberForImageChange == "Aisle:NOAISLE" || checkForAisleNumberForImageChange == "Aisle:Right Center" || checkForAisleNumberForImageChange == "Aisle:Left" || checkForAisleNumberForImageChange == "Aisle:Left Center"){
             // change image at position right;
+        	console.log('Added click for Right');
+            
+            $('#asileRight').bind('click',function(){
+                                  console.log('CLICKED ON AISLE Right');
+                                  $.mobile.changePage('#nine',{ transition: "slide"});
+                                  });
+            
             $('#asileRight').attr('src',"images/right_active.png");
             
-            $('#asileRight').click(function(){
-                                   $.mobile.changePage('#nine');
-                                   });
         }
         
-        if(checkForAisleNumberForImageChange == "Aisle:Left" || checkForAisleNumberForImageChange == "Aisle:Left Center"){
-            // change image at position left;
-            $('#asileLeft').attr('src',"images/left_active.png");
-            
-            $('#asileLeft').click(function(){
-                                  $.mobile.changePage('#nine');
-                                  });
-        }
+        /*        if(checkForAisleNumberForImageChange == "Aisle:Left" || checkForAisleNumberForImageChange == "Aisle:Left Center"){
+         // change image at position left;
+         console.log('Added click for Left');
+         
+         $('#asileRight').bind('click',function(){
+         $.mobile.changePage('#nine',{ transition: "slide"});
+         });
+         
+         $('#asileRight').attr('src',"images/right_active.png");
+         
+         }*/
         
-        if(checkForAisleNumberForImageChange == "Aisle:Front" || checkForAisleNumberForImageChange == "Aisle:Front Right" || checkForAisleNumberForImageChange == "Aisle:Front Left"){
+        else if(checkForAisleNumberForImageChange == "Aisle:Front" || checkForAisleNumberForImageChange == "Aisle:Front Right" || checkForAisleNumberForImageChange == "Aisle:Front Left"){
             // change image at position top;
+            
+        	console.log('Added click for Front');
+        	
+            $('#asileFront').bind('click',function(){
+                                  console.log('CLICKED ON AISLE Front');
+                                  $.mobile.changePage('#nine',{ transition: "slide"});
+                                  });
+            
             $('#asileFront').attr('src',"images/front_active.png");
             
-            $('#asileFront').click(function(){
-                                   $.mobile.changePage('#nine');
-                                   });
         }
         
-        if(checkForAisleNumberForImageChange == "Aisle:Back" || checkForAisleNumberForImageChange == "Aisle:Back Right" || checkForAisleNumberForImageChange == "Aisle:Back Left"){
-            // change image at position down;
+        else if(checkForAisleNumberForImageChange == "Aisle:Back" || checkForAisleNumberForImageChange == "Aisle:Back Right" || checkForAisleNumberForImageChange == "Aisle:Back Left"){
+            // change image at position down;            
+        	console.log('Added click for BACK');
+        	
+            $('#asileBack').bind('click',function(){
+                                 console.log('CLICKED ON AISLE BACK');
+                                 $.mobile.changePage('#nine',{ transition: "slide"});
+                                 });
+            
             $('#asileBack').attr('src',"images/back_active.png");
             
-            $('#asileBack').click(function(){
-                                  $.mobile.changePage('#nine');
-                                  });
+        }else{
+        	console.log('Not found SOME DIFFERENT AISLE RESPONSE RECEIVED');
         }
     }// for loop
 }
@@ -1679,30 +1771,34 @@ $(function(){
                        
                        
                        
-                       $('#show_map').removeClass("normal");
-                       $('#show_map').addClass("selected");
-                       $('#show_list').removeClass("selected");
-                       $('#show_list').addClass("normal");
+                       $('#show_map').removeClass("map_normal");
+                       $('#show_map').addClass("map_selected");
+                       $('#show_list').removeClass("map_selected");
+                       $('#show_list').addClass("map_normal");
                        
                        
                        
                        $('#map_list_view').css('display','none');
                        $('#map_canvas').css('display','block');
                        
+                       $('#show_map').css('color','black');
+                       $('#show_list').css('color','white');
+                       
                        });
   
   $('#show_list').click(function(){
                         
                         
-                        $('#show_map').removeClass("selected");
-                        $('#show_map').addClass("normal");
-                        $('#show_list').removeClass("normal");
-                        $('#show_list').addClass("selected");
+                        $('#show_map').removeClass("map_selected");
+                        $('#show_map').addClass("map_normal");
+                        $('#show_list').removeClass("map_normal");
+                        $('#show_list').addClass("map_selected");
                         
                         $('#map_canvas').css('display','none');
                         $('#map_list_view').css('display','inline');
                         
-                        
+                        $('#show_map').css('color','white');
+                        $('#show_list').css('color','black');
                         
                         // inflate the list properly
                         
@@ -1729,7 +1825,7 @@ $('#click_row').live('click',function(){
                      window.localStorage.setItem("store_addr",s_addrArray[i]);
                      window.localStorage.setItem("store_miles",s_distanceArray[i]);
                      
-                     var totalItems = s_storeIdArray[i]+'total';																		
+                     var totalItems = s_storeIdArray[i]+'total';                                   
                      var s_items = window.localStorage.getItem(totalItems)+'/'+productArray.length+' ITEMS';
                      
                      var s_percent = window.localStorage.getItem(s_storeIdArray[i])+'%';
@@ -1740,7 +1836,7 @@ $('#click_row').live('click',function(){
                      
                      window.localStorage.setItem("store_id",s_storeIdArray[i]);
                      
-                     $.mobile.changePage('#six');
+                     $.mobile.changePage('#six',{ transition: "slide"});
                      
                      });
 
@@ -1768,6 +1864,9 @@ $(function(){
                              $('#list_show_unavailable').css('display','none');
                              $('#list_show_available').css('display','inline');
                              
+                             $('#show_available').css('color','black');
+                             $('#show_unavailable').css('color','white');
+                             
                              
                              
                              });
@@ -1784,7 +1883,8 @@ $(function(){
                                $('#list_show_available').css('display','none');
                                $('#list_show_unavailable').css('display','inline');
                                
-                               
+                               $('#show_available').css('color','white');
+                               $('#show_unavailable').css('color','black');
                                });
   });
 
@@ -1794,7 +1894,7 @@ $(function(){
 /****************** LAST PAGE ***************************/
 
 $('#id_overview').click(function(){
-                        $.mobile.changePage('#eight');
+                        $.mobile.changePage('#eight',{ transition: "slide",reverse: true});
                         });
 
 $('#drop_down').click(function(){
@@ -1808,3 +1908,4 @@ $('#clickme').click(function() {
                                          // Animation complete.
                                          });
                     });
+

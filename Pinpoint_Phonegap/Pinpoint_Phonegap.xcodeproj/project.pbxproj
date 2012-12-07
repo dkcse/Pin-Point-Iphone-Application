@@ -40,10 +40,6 @@
 		6A5C830D1637C5A600E3B801 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6A5C830C1637C5A600E3B801 /* MainViewController.xib */; };
 		6A5C83111637C5A600E3B801 /* verify.sh in Resources */ = {isa = PBXBuildFile; fileRef = 6A5C83101637C5A600E3B801 /* verify.sh */; };
 		6A5C83181637C5F500E3B801 /* www in Resources */ = {isa = PBXBuildFile; fileRef = 6A5C83171637C5F500E3B801 /* www */; };
-		6A5DAB15164B8D3A00A7B081 /* dot.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A5DAB14164B8D3A00A7B081 /* dot.png */; };
-		6A5DAB1E164D1E5D00A7B081 /* infoBubble.js in Sources */ = {isa = PBXBuildFile; fileRef = 6A5DAB1D164D1E5D00A7B081 /* infoBubble.js */; };
-		6AFCC77A1649197300C4DB98 /* location_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFCC7791649197300C4DB98 /* location_background.png */; };
-		6AFCC77D16491B6400C4DB98 /* pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AFCC77C16491B6400C4DB98 /* pin.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -86,10 +82,6 @@
 		6A5C830F1637C5A600E3B801 /* README */ = {isa = PBXFileReference; lastKnownFileType = text; name = README; path = Plugins/README; sourceTree = "<group>"; };
 		6A5C83101637C5A600E3B801 /* verify.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = verify.sh; sourceTree = "<group>"; };
 		6A5C83171637C5F500E3B801 /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; path = www; sourceTree = "<group>"; };
-		6A5DAB14164B8D3A00A7B081 /* dot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dot.png; sourceTree = "<group>"; };
-		6A5DAB1D164D1E5D00A7B081 /* infoBubble.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = infoBubble.js; sourceTree = "<group>"; };
-		6AFCC7791649197300C4DB98 /* location_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = location_background.png; sourceTree = "<group>"; };
-		6AFCC77C16491B6400C4DB98 /* pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pin.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,7 +159,6 @@
 		6A5C82D91637C5A600E3B801 /* Pinpoint_Phonegap */ = {
 			isa = PBXGroup;
 			children = (
-				6A5DAB1D164D1E5D00A7B081 /* infoBubble.js */,
 				6A5C82E21637C5A600E3B801 /* Cordova.framework */,
 				6A5C82E41637C5A600E3B801 /* Resources */,
 				6A5C83051637C5A600E3B801 /* Classes */,
@@ -180,11 +171,8 @@
 		6A5C82DA1637C5A600E3B801 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				6AFCC7791649197300C4DB98 /* location_background.png */,
 				6A5C82DB1637C5A600E3B801 /* Pinpoint_Phonegap-Info.plist */,
-				6AFCC77C16491B6400C4DB98 /* pin.png */,
 				6A5C82DC1637C5A600E3B801 /* InfoPlist.strings */,
-				6A5DAB14164B8D3A00A7B081 /* dot.png */,
 				6A5C82DF1637C5A600E3B801 /* main.m */,
 				6A5C82E11637C5A600E3B801 /* Pinpoint_Phonegap-Prefix.pch */,
 				6A5C83031637C5A600E3B801 /* Cordova.plist */,
@@ -349,9 +337,6 @@
 				6A5C830D1637C5A600E3B801 /* MainViewController.xib in Resources */,
 				6A5C83111637C5A600E3B801 /* verify.sh in Resources */,
 				6A5C83181637C5F500E3B801 /* www in Resources */,
-				6AFCC77A1649197300C4DB98 /* location_background.png in Resources */,
-				6AFCC77D16491B6400C4DB98 /* pin.png in Resources */,
-				6A5DAB15164B8D3A00A7B081 /* dot.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -381,7 +366,6 @@
 				6A5C82E01637C5A600E3B801 /* main.m in Sources */,
 				6A5C83081637C5A600E3B801 /* AppDelegate.m in Sources */,
 				6A5C830B1637C5A600E3B801 /* MainViewController.m in Sources */,
-				6A5DAB1E164D1E5D00A7B081 /* infoBubble.js in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

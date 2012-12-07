@@ -1,11 +1,11 @@
 // Author :- Aamir Shah
 
+
 /* Every time the document is loaded this function is called
  The purpose of the function is to check whether any list is present in the data base
  or not.
  
  Count specifies the total number of lists in the Data base.
- 
  */
 $(document).ready(function(){
                   
@@ -27,7 +27,6 @@ $(document).ready(function(){
                   onDeviceReady();
                   
                   /*
-                   
                    Every time the home page is loaded check the database, and
                    accordingly show the list-view
                    */
@@ -66,7 +65,6 @@ $(document).ready(function(){
                                         $('#list').css('display','inline');
                                         $('#noList').css('display','none');
                                         }
-                                        
                                         }  
                                         });
                   });
@@ -100,6 +98,17 @@ function onDeviceReady() {
     }    
 }
 
+// function to show and hide the loading screen
+
+function showLoading(){
+    $("body").append('<div class="modalWindow"/>');
+    $.mobile.showPageLoadingMsg();
+}
+
+function hideLoading(){
+    $(".modalWindow").remove();
+    $.mobile.hidePageLoadingMsg();
+}
 
 
 /****************************************************** DATABASE *******************************************************************/
@@ -162,8 +171,15 @@ function querySuccess(tx, results) {
                     + " total_items =  "       + results.rows.item(i).total_items
                     + " upload_time =  "       + results.rows.item(i).upload_time);
         
+        var name_without_ = results.rows.item(i).name;
+        if(name_without_.indexOf('_') > -1){
+            // there is a space
+            // replace all spaces with _    	
+            name_without_ = name_without_.replace(/_/g, ' ');
+        }
+        
         // inflate the list view 
-        $('#id_ul').append('<li class="custom_listview_img"> <h1 class="list_title" id="list_title">'+ results.rows.item(i).name +'</h1><p class="list_items">'+ results.rows.item(i).total_items +' ITEMS. </p> <p class="list_time">UPDATED :- '+results.rows.item(i).upload_time+'</p><img  id="deleteMe" style="margin-left: 275px; margin-top: 49px;" src="images/curl.png" /></li>');
+        $('#id_ul').append('<li id="main_full_row" class="custom_listview_img"> <h1 class="list_title" id="list_title">'+ name_without_ +'</h1><p class="list_items">'+ results.rows.item(i).total_items +' ITEMS. </p> <p class="list_time">UPDATED :- '+results.rows.item(i).upload_time+'</p><img  id="deleteMe" style="margin-left: 275px; margin-top: 49px;" src="images/curl.png" /></li>');
     }
     
     // refresh the listview
@@ -184,6 +200,10 @@ function insertRecord(name,total_items,upload_time) {
                    tx.executeSql(insertStatement, [name,total_items,upload_time],insertedSucess, errorCB);
                    });
 }
+
+
+
+
 
 function updateTotalItems(list_name,items_count){
     console.log("Inside update function... () ....");
@@ -208,6 +228,8 @@ function updateTotalItems(list_name,items_count){
                    {
                    tx.executeSql(updateStatement, [items_count,updated_time],updationSucess, errorCB);
                    });
+    
+    
 }
 
 
@@ -257,6 +279,8 @@ function queryItemsSuccess(tx, results) {
 
 function updationSucess(){
     console.log("Updation successfull.... :)");
+    
+    
 }
 
 
@@ -341,8 +365,6 @@ function bufferData(){
     db.transaction(tempPopulate, tempError, tempSuccess);
 }
 
-
-
 // Create the database (Populate the database)
 function tempPopulate(tx) {
     
@@ -364,9 +386,6 @@ function tempSuccess() {
     console.log("temp populateDB SUCCESS");        
 }
 
-
-
-
 // inserting into the database
 function insertBufferRecords(arrayItemName , arrayItemCategory, arrayItemID,  arrayItemImage, arrayAisleNumber) {
     
@@ -382,6 +401,7 @@ function insertBufferRecords(arrayItemName , arrayItemCategory, arrayItemID,  ar
                    tx.executeSql(insertStatement, [ arrayItemName[i].childNodes[0].nodeValue,arrayItemCategory[i].childNodes[0].nodeValue,arrayItemID[i].childNodes[0].nodeValue, arrayItemImage[i].childNodes[0].nodeValue,arrayAisleNumber[i].childNodes[0].nodeValue],insertedBufferSucess, tempError);
                    }
                    });
+    
 }
 
 function insertedBufferSucess(){
@@ -433,7 +453,8 @@ function queryCategorySuccess(tx, results) {
     // after adding all the items refresh the list view.                                 
     $('#category_list_view').listview('refresh');     
     
-    $.mobile.hidePageLoadingMsg();
+    //$.mobile.hidePageLoadingMsg();
+    hideLoading();
 }
 
 
@@ -450,6 +471,7 @@ function createListTable(){
     var db = window.openDatabase("Database", "1.0", "Pin Point", 200000);
     db.transaction(listPopulate, listError, listSuccess);
 }
+
 
 
 
@@ -744,13 +766,6 @@ function queryBulkItemsSuccess(tx, results) {
 }
 
 
-
-
-
-
-
-
-
 // Transaction error callback
 function errorCheckBuffer(err) {
     alert("errorCheckBuffer ::--- Error processing SQL: "+err);
@@ -772,6 +787,9 @@ function errorCheckBuffer(err) {
 
 
 function getTotalItems(){
+    // flush the previous thing
+    $('#master_list').empty();
+    
     console.log("getTotalItems()");
     var db = window.openDatabase("Database", "1.0", "Pin Point", 200000);     
     db.transaction(queryTotalItems, errorLists);
@@ -802,7 +820,7 @@ function queryTotalItemsSuccess(tx, results) {
     // show on UI
     $('#total_items_counter').html('Your list contains ' + total_count + ' items.');
     
-    
+    window.localStorage.setItem("before_find_store_count",total_count);
     if(total_count != 0){
         
         var db = window.openDatabase("Database", "1.0", "Pin Point", 200000);
@@ -810,7 +828,7 @@ function queryTotalItemsSuccess(tx, results) {
         
     }else{
         console.log('no items in the list');
-        $('#master_list').empty();        
+        
     }
     
 }
@@ -865,8 +883,8 @@ function fetchSubList(tx) {
     
     console.log('bufferCategoriesOfList.length === ' + bufferCategoriesOfList.length);
     
-    // clear the previous UI
-    $('#master_list').empty();
+    //        // clear the previous UI
+    //        $('#master_list').empty();
     
     for(var i=0;i<bufferCategoriesOfList.length;i++){
         
@@ -889,8 +907,10 @@ function fetchSubListSuccess(tx, results) {
     $('#master_list').append('<li class="categories_major"><p class="text_of_category">'+results.rows.item(0).listItemCategory+'</p><img id="category_full_delete" class="img_of_category" src="images/shopping_x_normal.png"></li>');
     
     for(var i=0;i<len;i++){                
-        $('#master_list').append('<li class="custom_listview_img_edge"><img width="45" height="45" class="sub_category_img" src="'+results.rows.item(0).listItemImage+'" /><h6 class="sub_category_name">'+results.rows.item(i).listItemName+'</h6><p class="sub_category_quantity"> QTY :-' + results.rows.item(i).listQuantity + ' </p><img id="catgeory_item_delete" class="sub_category_rightside" src="images/shopping_x_normal.png" /></li>');
+        $('#master_list').append('<li id="master_click" class="custom_listview_img_edge"><h2 style="display:none">'+results.rows.item(0).listItemCategory+'</h2><img id="get_src" width="45" height="45" class="sub_category_img" src="'+results.rows.item(i).listItemImage+'" /><h6 class="sub_category_name">'+results.rows.item(i).listItemName+'</h6><h5 style="display:none">'+results.rows.item(i).listQuantity+'</h5><p class="sub_category_quantity"> QTY :-' + results.rows.item(i).listQuantity + ' </p><img id="catgeory_item_delete" class="sub_category_rightside" src="images/shopping_x_normal.png" /></li>');
     }
+    
+    
     
     // after adding all the rows refresh the master list
     $('#master_list').listview('refresh');           
@@ -898,6 +918,313 @@ function fetchSubListSuccess(tx, results) {
 
 
 /************************************* DYNAMIC DELETION CATEGORY WISE ************************************************************************************/
+var temp_ref;
+var temp_main_ref;
+$('#master_click').live('click',function (){
+                        
+                        temp_main_ref = $(this);
+                        $('#temp_view').remove();
+                        
+                        
+                        
+                        if(window.localStorage.getItem("open") == "open"){
+                        // close
+                        window.localStorage.setItem("open","close");
+                        }else{
+                        
+                        
+                        var cur_name=$(this).children('h6').text();
+                        
+                        var cur_qty=$(this).children('h5').text();
+                        cur_qty = parseInt(cur_qty);
+                        
+                        var cur_url=$(this).children('#get_src').attr('src');
+                        var cur_cat=$(this).children('h2').text();
+                        
+                        
+                        temp_ref=$(this).children('.sub_category_quantity');
+                        
+                        // set bcoz of the definition of delete func
+                        window.localStorage.setItem("item_to_be_dropped",cur_name);
+                        
+                        window.localStorage.setItem("cur_name",cur_name);	
+                        window.localStorage.setItem("cur_cat",cur_cat);
+                        window.localStorage.setItem("cur_url",cur_url);
+                        window.localStorage.setItem("now",cur_qty);
+                        
+                        window.localStorage.setItem("open","open");
+                        
+                        $(this).after('<li id="temp_view" class="tempView"><div class="qty_box"><p class="temp_qty">QUANTITY</p><img id="dec" class="qty_less" src="images/quantity_less_normal.png" /><img class="qty_white_box" src="images/quantity_box.png" /><h3  id="qty_value" class="qty_qty">'+cur_qty+'</h3><img id="inc" class="qty_more" src="images/quantity_more_normal.png" /></div><div class="move_box"><img id="moving" class="move_to" src="images/move_to_row.png" /></div></li>');
+                        
+                        $('#master_list').listview('refresh');   
+                        }
+                        });
+
+
+$('#dec').live('click',function(){
+               var now = $(this).siblings('h3').text();
+               now  = parseInt(now);
+               now--;
+               if(now<0){
+               now=0;
+               }
+               $('#qty_value').html(now);
+               window.localStorage.setItem("now",now); 
+               
+               // update the ui
+               temp_ref.html('QTY :-'+now);
+               
+               // update the database
+               updateQuantity();
+               
+               
+               });
+
+$('#inc').live('click',function(){
+               var now = $(this).siblings('h3').text();
+               now  = parseInt(now);
+               now++;
+               $('#qty_value').html(now);
+               
+               window.localStorage.setItem("now",now); 
+               
+               // udpate the ui
+               temp_ref.html('QTY :-'+now);
+               
+               // update the database
+               updateQuantity();	
+               
+               });
+
+
+function updateQuantity(){
+	
+	
+	var db = window.openDatabase("Database", "1.0", "Pin Point", 200000);
+    db.transaction(updateQuantityInListTable, errorQtyUpdation);
+    
+}
+
+
+
+function updateQuantityInListTable(tx) {
+    
+    console.log("updateQuantityInListTable(tx)");
+    // get the title of the list
+    var list_title = window.localStorage.getItem("title_of_list");
+    var list_name = window.localStorage.getItem("cur_name"); 
+    var qty = window.localStorage.getItem("now"); 
+    
+    var updateQtyStatement = 'UPDATE '+list_title+' SET listQuantity = ? WHERE listItemName = "'+list_name+'";';
+    console.log('updateQtyStatement ='+updateQtyStatement);
+    
+    var db = window.openDatabase("Database", "1.0", "Pin Point", 200000);
+    
+    db.transaction(function(tx) 
+                   {
+                   tx.executeSql(updateQtyStatement, [qty],updationQtySucessfull, errorQtyUpdation);
+                   });
+    
+    
+}
+function updationQtySucessfull(){
+    
+    console.log('updationQtySucessfull()....... *****************************************');
+}
+
+//Transaction error callback
+function errorQtyUpdation(err) {
+    alert("errorQtyUpdation ::--- Error processing SQL: "+err);
+}
+
+
+
+$('#moving').live('click',function(){
+                  //	alert('move to');
+                  
+                  getCurrentLists();
+                  
+                  // fetch the total list det
+                  $( '#popupMenu' ).popup();		
+                  $('#popupMenu').popup('open');
+                  });
+
+
+function getCurrentLists(){
+    var db = window.openDatabase("Database", "1.0", "Pin Point", 200000);
+    db.transaction(getCurrentListsQuery, errorCurrentLists);
+}
+
+function getCurrentListsQuery(tx){
+    
+    
+    var queryStmt = 'SELECT name FROM PIN_POINT';
+    console.log('queryStmt = '+queryStmt);
+    
+    tx.executeSql(queryStmt,[],queryCurrentListsSuccess,errorCurrentLists);
+}
+
+function queryCurrentListsSuccess(tx, results) {
+    
+    var len = results.rows.length;
+    console.log('result len list COUNT == '+len);
+    
+    $('#popup_list').empty();   
+    
+    window.localStorage.setItem("only_one",len);
+    for(var i=0;i<len;i++){
+        $('#popup_list').append('<li id="popup_sub_item" class="popup_text"><p>'+results.rows.item(i).name+'</p></li>');
+    }           
+}
+
+
+//Transaction error callback
+function errorCurrentLists(err) {
+    alert("errorCurrentLists ::--- Error processing SQL: "+err);
+}
+
+
+
+$('#popup_sub_item').live('click',function(){
+                          
+                          
+                          var only_one = window.localStorage.getItem("only_one");
+                          only_one = parseInt(only_one);
+                          
+                          var list_title = window.localStorage.getItem("title_of_list");
+                          
+                          var new_list=$(this).children('p').text();
+                          window.localStorage.setItem("new_list",new_list);
+                          
+                          if(only_one == 1 || list_title == new_list){
+                          
+                          $('#temp_view').remove();
+                          
+                          }else{
+                          
+                          // 	delete from Database
+                          //	window.localStorage.setItem("item_to_be_dropped",delete_by_item_name); set at line 931
+                          deleteItemInCategory();
+                          
+                          // 	delete from UI
+                          temp_main_ref.remove();
+                          $('#temp_view').remove();
+                          
+                          moveRecord();
+                          }
+                          
+                          $('#popupMenu').popup('close');
+                          // refresh the page 4 	
+                          $.mobile.changePage('#four');
+                          });
+
+
+
+
+
+
+
+
+
+//inserting into the database
+function moveRecord() {
+    
+    console.log("inside moveRecord() !!!!");
+    
+    var list_title = window.localStorage.getItem("new_list");
+    
+    var insertStatement = "INSERT INTO "+list_title+" (listItemName  , listItemCategory, listItemImage, listQuantity) VALUES (?,?,?,?)";
+    var db = window.openDatabase("Database", "1.0", "Pin Point", 200000);
+    
+    db.transaction(function(tx) 
+                   {
+                   var cur_name = window.localStorage.getItem("cur_name");
+                   var cur_cat = window.localStorage.getItem("cur_cat");
+                   var cur_url = window.localStorage.getItem("cur_url");
+                   var cur_qty = window.localStorage.getItem("now");
+                   
+                   
+                   console.log('cur_name = '+cur_name);
+                   console.log('cur_cat = '+cur_cat);
+                   console.log('cur_url = '+cur_url);
+                   console.log('cur_qty = '+cur_qty);
+                   
+                   tx.executeSql(insertStatement, [cur_name,cur_cat,cur_url,cur_qty],moveRecordSucess, moveRecordError);
+                   
+                   });
+    
+}
+
+function moveRecordSucess(){
+    console.log(" moveRecordSucess......");
+    
+    // update the PIN_POINT TABLE
+    getLatestCountFromList();
+}
+
+
+
+
+
+
+function getLatestCountFromList(){
+    
+    console.log("getLatestCountFromList()");
+    var db = window.openDatabase("Database", "1.0", "Pin Point", 200000);     
+    
+    db.transaction(queryForLatestItems, errorCurrentLists);
+}
+
+
+function queryForLatestItems(tx) {
+    
+    console.log("queryForLatestItems(tx)");
+    
+    // get the title of the list
+    var list_title = window.localStorage.getItem("new_list");
+    
+    var queryStatement = 'SELECT total_items FROM PIN_POINT WHERE name = "'+list_title+'";';
+    
+    tx.executeSql(queryStatement, [], queryLatestItemsSuccess, errorCurrentLists);
+}
+
+
+function queryLatestItemsSuccess(tx, results) {
+    console.log("queryItemsSuccess");
+    
+    
+    var list_title = window.localStorage.getItem("new_list");
+    
+    var len = results.rows.length;
+    console.log('result len == '+len);
+    
+    var newItemCount = results.rows.item(0).total_items;
+    
+    console.log(' total_items =  '+ results.rows.item(0).total_items);
+    
+    newItemCount++;
+    
+    console.log(newItemCount);
+    
+    console.log("Calling updateTotalItems() .... ");
+    updateTotalItems(list_title,newItemCount);
+}
+
+
+function updationSucess(){
+    console.log("Updation successfull.... :)");
+    
+    
+}
+
+
+
+
+//Transaction error callback
+function moveRecordError(err) {
+    alert("moveRecordError ::--- Error processing SQL: "+err);
+}
+
 
 $('#category_full_delete').live('click',function(){
                                 
@@ -968,7 +1295,7 @@ function queryForDeletionCountSuccess(tx, results) {
 
 function deletionCategorySucess(){
     console.log('All items in category deleted ');
-    
+    //    $('#master_list').empty(); // to refresh properly
     getItemCountInThisList();
 }
 
@@ -1167,6 +1494,7 @@ function queryItemsForUpdationSuccess(tx, results) {
     var updated_count = parseInt(prevCount) - 1;
     console.log('updated_count'+updated_count);
     
+    $('#total_items_counter').html('Your list contains ' + updated_count + ' items.');
     updateTotalItems(list_title,updated_count);
 }
 
@@ -1212,20 +1540,19 @@ function errorLists(err) {
 
 /****************************************************** PAGE 1 *******************************************************************/
 
-// function to toggle the new list image
-// on click goto the oneB page
-$(function() {
-  $("#id_new_image")
-  .mouseover(function() { 
-             $(this).attr('src',"images/new_list_pressed.png");
-             })
-  .mouseout(function() {
-            $(this).attr('src',"images/new_list_normal.png");
-            })
-  .click(function(){
-         $.mobile.changePage('#oneB');
-         });
-  });
+
+$("#id_new_image").bind('tap',function() {      
+                        $("#id_new_image").attr('src',"images/new_list_pressed.png");     
+                        });
+
+$( '#homepage' ).bind( "pagebeforeshow", function(){
+                      $("#id_new_image").attr('src',"images/new_list_normal.png");    
+                      });
+
+$("#id_new_image").click(function(){
+                         $.mobile.changePage('#oneB',{ transition: "slide"});
+                         });
+
 
 
 /****************************************************** PAGE 1b *******************************************************************/
@@ -1233,29 +1560,45 @@ $(function() {
 // just to clear the text box everytime
 $( '#oneB' ).bind( "pageshow", function(){
                   $('#id_text_box').val('');
+                  
                   });
 
 
-// function to change the cancel image on mouse over
-// onclick go back to the Dash board.
-$(function() {
-  $("#id_cancel")
-  .mouseover(function() { 
-             $(this).attr('src',"images/cancel_pressed.png");
-             })
-  .mouseout(function() {
-            $(this).attr('src',"images/cancel_normal.png");
-            })
-  .click(function(){
-         $.mobile.changePage('#');
-         });
-  });
+
+$("#id_cancel").bind('tap',function() {     
+                     $("#id_cancel").attr('src',"images/cancel_pressed.png");      
+                     });
+
+$( '#oneB' ).bind( "pagebeforeshow", function(){
+                  $("#id_cancel").attr('src',"images/cancel_normal.png");    
+                  });
+
+$("#id_cancel").click(function(){
+                      $.mobile.changePage('#',{ transition: "slide",reverse: true});
+                      });
 
 
+// action to be done when create button is clicked
 $('#id_create').click(function(){
                       
                       // get the value from the text box
                       var temp=$('#id_text_box').val();
+                      
+                      if(temp.indexOf(' ') > -1){
+                      // there is a space
+                      // replace all spaces with _    	
+                      temp = temp.replace(/ /g, '_');
+                      }
+                      
+                      //|| temp.indexOf(' ') > -1
+                      if(temp == ''  ){
+                      alert('Not a valid name');
+                      $('#id_create').attr('href','#');
+                      $.mobile.changePage('#',{ transition: "slide",reverse: true});
+                      
+                      }else{
+                      
+                      $('#id_create').attr('href','#two');
                       
                       // fetch the current date
                       var d = new Date();
@@ -1273,19 +1616,23 @@ $('#id_create').click(function(){
                       window.localStorage.setItem("title_of_list",temp);
                       
                       // update the UI
-                      $('#id_ul').append('<li class="custom_listview_img"> <h1 class="list_title" id="list_title">'+ temp +'</h1><p class="list_items">'+ '0' +'</p> <p class="list_time">UPDATED :- '+updated+'</p><img  id="deleteMe" style="margin-left: 275px; margin-top: 49px;" src="images/curl.png" /></li>');
+                      $('#id_ul').append('<li id="main_full_row" class="custom_listview_img"> <h1 class="list_title" id="list_title">'+ temp +'</h1><p class="list_items">'+ '0' +'</p> <p class="list_time">UPDATED :- '+updated+'</p><img  id="deleteMe" style="margin-left: 275px; margin-top: 49px;" src="images/curl.png" /></li>');
                       
                       console.log("inserted :--"+temp);
                       
                       
                       // Create the list table in the data base for later use
                       createListTable();
+                      
+                      }
                       });
 
 
 
 // function to delete the list view row
 $('#deleteMe').live('click', function(){
+                    
+                    window.localStorage.setItem("delete_check","yes");
                     
                     var delete_by_name=$(this).siblings('h1').text();
                     var temp=confirm('Are you sure you want to delete the shopping list ' + delete_by_name,'');
@@ -1294,6 +1641,12 @@ $('#deleteMe').live('click', function(){
                     
                     // delete from database
                     var delete_by_name=$(this).siblings('h1').text();
+                    if(delete_by_name.indexOf(' ') > -1){
+                    // there is a space
+                    // replace all spaces with _    	
+                    delete_by_name = delete_by_name.replace(/ /g, '_');
+                    }
+                    
                     console.log(delete_by_name);
                     deleteRecord(delete_by_name);
                     
@@ -1308,18 +1661,31 @@ $('#deleteMe').live('click', function(){
                     });
 
 // function to show the title on the list view onClick();
-$('#list_title').live('click',function(){
-                      
-                      var title_of_list=$(this).text();
-                      
-                      
-                      window.localStorage.setItem("title_of_list",title_of_list);
-                      var title = window.localStorage.getItem("title_of_list");
-                      console.log(title);
-                      
-                      $.mobile.changePage('#four');
-                      
-                      });
+$('#main_full_row').live('click',function(){
+                         
+                         var del_chk = window.localStorage.getItem("delete_check");
+                         
+                         if(del_chk == 'yes'){
+                         window.localStorage.setItem("delete_check","no");
+                         }else{
+                         var title_of_list=$(this).children('h1').text();
+                         
+                         
+                         if(title_of_list.indexOf(' ') > -1){
+                         // there is a space
+                         // replace all spaces with _    	
+                         title_of_list = title_of_list.replace(/ /g, '_');
+                         }
+                         
+                         
+                         window.localStorage.setItem("title_of_list",title_of_list);
+                         var title = window.localStorage.getItem("title_of_list");
+                         console.log(title);
+                         
+                         $.mobile.changePage('#four',{ transition: "slide"});
+                         }
+                         
+                         });
 
 
 
@@ -1336,38 +1702,77 @@ $( '#two' ).bind( "pageshow", function(){
                  var title = window.localStorage.getItem("title_of_list");
                  console.log("page 2="+title);
                  
+                 if(title.indexOf('_') > -1){
+                 // there is a _
+                 // replace all spaces with space
+                 title = title.replace(/_/g, ' ');    	
+                 }
+                 
+                 
                  $('#page2_title').html(title);
                  $('#id_of_search_key').val('');
                  });
 
 
 
+
+$("#id_view_list , #id_view_list_2, #id_view_list_page5").bind('tap',function() {     
+                                                               $("#id_view_list , #id_view_list_2, #id_view_list_page5").attr('src',"images/view_list_pressed.png");     
+                                                               });
+
+$( '#two' ).bind( "pagebeforeshow", function(){
+                 $("#id_view_list").attr('src',"images/view_list.png");  
+                 $("#id_x_1").attr('src',"images/x_normal.png");   
+                 });
+
+$( '#three' ).bind( "pagebeforeshow", function(){
+                   $("#id_view_list_2").attr('src',"images/cancel_normal.png");  
+                   $("#id_x_2").attr('src',"images/x_normal.png");   
+                   });
+
+
+$( '#four' ).bind( "pagebeforeshow", function(){
+                  $("#id_x_3").attr('src',"images/x_normal.png");
+                  $("#id_all_list").attr('src',"images/all_lists_normal.png");
+                  $("#id_new_products").attr('src',"images/add_products_normal.png");    
+                  $("#id_find_stores").attr('src',"images/find_store_normal.png");   
+                  });
+
+
+$( '#five' ).bind( "pagebeforeshow", function(){
+                  $("#id_view_list_page5").attr('src',"images/view_list.png"); 
+                  $("#id_x_4").attr('src',"images/x_normal.png");   
+                  });
+
+
+
+
 // function to change the view list image on mouse hover
 $(function() {
   $("#id_view_list , #id_view_list_2, #id_view_list_page5")
-  .mouseover(function() { 
-             $(this).attr('src',"images/view_list_pressed.png");
-             })
-  .mouseout(function() {
-            $(this).attr('src',"images/view_list.png");
-            })
   .click(function(){
-         
-         $.mobile.changePage('#four');
-         
+         $.mobile.changePage('#four',{ transition: "slide",reverse: true});
          });
   });
+
+
+
+
+
+$("#id_x_1 , #id_x_2, #id_x_3, #id_x_4").bind('tap',function() {      
+                                              $("#id_x_1").attr('src',"images/x_pressed.png");        
+                                              $("#id_x_2").attr('src',"images/x_pressed.png");
+                                              $("#id_x_3").attr('src',"images/x_pressed.png");
+                                              $("#id_x_4").attr('src',"images/x_pressed.png");
+                                              });
+
+
+
 
 
 // function to change the x pic
 $(function() {
   $("#id_x_1 , #id_x_2, #id_x_3, #id_x_4")
-  .mouseover(function() { 
-             $(this).attr('src',"images/x_pressed.png");
-             })
-  .mouseout(function() {
-            $(this).attr('src',"images/x_normal.png");
-            })
   .click(function(){
          
          var temp=confirm("Are you sure you want to delete","");
@@ -1380,7 +1785,9 @@ $(function() {
          deleteRecord(title);
          
          // move to dash board
-         $.mobile.changePage('#');
+         $.mobile.changePage('#',{ transition: "slide",reverse: true});
+         }else{
+         $("#id_x_1 , #id_x_2, #id_x_3, #id_x_4").attr('src',"images/x_normal.png");
          }
          
          });
@@ -1389,10 +1796,15 @@ $(function() {
 
 $('#search_id').click(function(){
                       
+                      
+                      $('#search_content').css('height','450px');
+                      
+                      if( $('#id_of_search_key').val().length == 0 ){
+                      alert("Enter item to search");
+                      }else{	  
                       var search_for= $('#id_of_search_key').val();
-                      
                       searchIt(search_for);
-                      
+                      }
                       });
 
 
@@ -1413,7 +1825,9 @@ function searchIt(search_for){
     arrayItemImage = [];
     arrayAisleNumber = [];
     
-    $.mobile.showPageLoadingMsg("a", "Searching...");
+    //$.mobile.showPageLoadingMsg("a", "Searching...");
+    
+    showLoading();
     
     $('#product_list_view').empty();
     $('#category_list_view').empty();
@@ -1466,9 +1880,11 @@ function searchIt(search_for){
             if(search_count==0 || search_count==null){
                 $('#search_list').css('display','none');
                 $('#search_noList').css('display','block');
+                $('#search_content').css('height','450px');
             }else{
                 $('#search_list').css('display','inline');
                 $('#search_noList').css('display','none');
+                $('#search_content').css('height','inherit');
             }
             
             
@@ -1483,7 +1899,7 @@ function searchIt(search_for){
                 var searchName = searchNameTemp.slice(0, searchNameTemp.indexOf("-")); 
                 
                 
-                $('#product_list_view').append('<li class="custom_listview_img_edge"><img width="45" height="45"src="'+arrayItemImage[i].childNodes[0].nodeValue+'" /><p class="search_result_name">'+arrayItemName[i].childNodes[0].nodeValue+'</p><h6 class="search_qty">'+searchQuantity+'</h6><img id="add_this_product" class="rightside" src="images/add_item_normal.png" /></li>');
+                $('#product_list_view').append('<li class="custom_listview_img_edge"><img width="45" height="45" src="'+arrayItemImage[i].childNodes[0].nodeValue+'" /><p class="search_result_name">'+arrayItemName[i].childNodes[0].nodeValue+'</p><h6 class="search_qty">'+searchQuantity+'</h6><img id="add_this_product" class="rightside" src="images/add_item_normal.png" /></li>');
             }
             
             $('#product_list_view').listview('refresh');      
@@ -1500,10 +1916,14 @@ function searchIt(search_for){
 // called when the user clciks on ADD in the PRODUCTS section....
 $('#add_this_product').live('click',function(){
                             
+                            var double_check = $(this).attr('src');
+                            
+                            if(double_check == "images/add_item_pressed.png"){
+                            alert('Already Added');
+                            }else{
                             
                             // change the image of selected
                             $(this).attr('src',"images/add_item_pressed.png");
-                            
                             
                             // fetch the name of the list
                             var tmp=$(this).siblings('p').text();
@@ -1515,9 +1935,9 @@ $('#add_this_product').live('click',function(){
                             getItemCountFromList(); // and update The update function is later called in the query success... updateTotalItems(list_title,new_count);
                             
                             
-                            // query * from BUFFER where itemName = "xyz" and then put that thing into the LIST table
+                            // query * from BUFFER where itemName = "xyz" in this case temp and then put that thing into the LIST table
                             getItemDataFromBuffer(); 
-                            
+                            }
                             });
 
 
@@ -1525,6 +1945,12 @@ $('#add_this_product').live('click',function(){
 
 
 $('#add_category_full').live('click',function(){
+                             
+                             var double_check_cat = $(this).attr('src');
+                             
+                             if(double_check_cat == "images/add_item_pressed.png"){
+                             alert('Already Added');
+                             }else{
                              
                              // change the image of selected
                              $(this).attr('src',"images/add_item_pressed.png");
@@ -1542,19 +1968,8 @@ $('#add_category_full').live('click',function(){
                              // update the count (count == count + total new entries added)
                              
                              getBulkItemCountFromList();
-                             
+                             }
                              });
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1564,11 +1979,13 @@ $('#add_category_full').live('click',function(){
 /****************************************************** PAGE 3 *******  page 3 is page 2 only ************************************************************/
 
 
-
 //function to toggle the tabs
 $(function(){
   
   $('#id_product').click(function(){
+                         
+                         
+                         
                          
                          $('#id_product').removeClass("normal");
                          $('#id_product').addClass("selected");
@@ -1577,7 +1994,11 @@ $(function(){
                          $('#id_category').addClass("normal");
                          
                          $('#id_category_items').css('display','none');
-                         $('#id_product_items').css('display','inline');
+                         $('#id_product_items').css('display','block');
+                         
+                         $('#id_product').css('color','black');
+                         $('#id_category').css('color','white');
+                         
                          
                          
                          });
@@ -1592,7 +2013,11 @@ $(function(){
                           
                           
                           $('#id_product_items').css('display','none');
-                          $('#id_category_items').css('display','inline');
+                          $('#id_category_items').css('display','block');
+                          
+                          $('#id_product').css('color','white');
+                          $('#id_category').css('color','black');
+                          
                           
                           });
   });
@@ -1604,80 +2029,84 @@ $(function(){
 /****************************************************** PAGE 4 *******************************************************************/
 
 
-
-
+$("#id_all_list").bind('tap',function() {
+                       
+                       $("#id_all_list").attr('src',"images/all_lists_pressed.png");
+                       
+                       });
 
 
 // function to set the title in the header bar
 $( '#four' ).bind( "pageshow", function(){
                   var title = window.localStorage.getItem("title_of_list");
-                  
+                  if(title.indexOf('_') > -1){
+                  // there is a _
+                  // replace all spaces with space
+                  title = title.replace(/_/g, ' ');    	
+                  }
                   
                   console.log("page 4's title == "+title);
                   
                   $('#page_title').html(title);
                   
-                  $("#id_all_list").attr('src',"images/all_lists_normal.png");
+                  // clear the previous UI
+                  $('#master_list').empty();
                   
                   // update
                   getTotalItems();
                   
                   });
 
-$( '#four' ).bind( "pageshow", function(){
-                  
-                  
-                  
-                  $('#id_all_list').trigger('mouseout');
-                  
-                  
-                  });
-
-
-
-
-
 // function to change the all lists pic on mouse over
 $(function() {
-  $("#id_all_list")
-  .mouseover(function() { 
-             $(this).attr('src',"images/all_lists_pressed.png");
-             })
-  .mouseout(function() {
-            $(this).attr('src',"images/all_lists_normal.png");
-            })
-  .click(function(){
-         $.mobile.changePage('#');
-         });
+  $("#id_all_list").click(function(){
+                          $.mobile.changePage('#',{ transition: "slide",reverse: true});
+                          });
   });
+
+$("#id_new_products").bind('tap',function() {     
+                           $("#id_new_products").attr('src',"images/add_products_pressed.png");      
+                           });
+
+
+
 
 // function to change the new products pic on mouse over
 $(function() {
   $("#id_new_products")
-  .mouseover(function() { 
-             $(this).attr('src',"images/add_products_pressed.png");
-             })
-  .mouseout(function() {
-            $(this).attr('src',"images/add_products_normal.png");
-            })
   .click(function(){
          console.log('add new products');
-         $.mobile.changePage('#two');
+         $.mobile.changePage('#two',{ transition: "slide"});
          });
   });
+
+
+
+$("#id_find_stores").bind('tap',function() {      
+                          $("#id_find_stores").attr('src',"images/find_store_selected.png");      
+                          });
+
+
+
+
+
 
 // function to change the find-store pic on mouse over
 $(function() {
   $("#id_find_stores")
-  .mouseover(function() { 
-             $(this).attr('src',"images/find_store_selected.png");
-             })
-  .mouseout(function() {
-            $(this).attr('src',"images/find_store_normal.png");
-            })
   .click(function(){
+         
+         var isValid = window.localStorage.getItem("before_find_store_count");
+         isValid = parseInt(isValid);
+         
+         if(isValid == 0 ){
+         alert('No items in the list');
+         $("#id_find_stores").attr('src',"images/find_store_normal.png");
+         }else{
          console.log('redirecting to find nearby stores page ');
-         $.mobile.changePage('#five');
+         $.mobile.changePage('#five',{ transition: "slide"});
+         }
+         
          });
   });
 
@@ -1689,20 +2118,21 @@ $(function() {
 /****************************************************** PAGE 6 *******************************************************************/
 
 
+$("#id_store").bind('tap',function() {      
+                    $("#id_store").attr('src',"images/stores_pressed.png");     
+                    });
+
+
+
+
 // function to change the stores pic on mouse over
 $(function() {
   $("#id_store")
-  .mouseover(function() { 
-             $(this).attr('src',"images/stores_pressed.png");
-             })
-  .mouseout(function() {
-            $(this).attr('src',"images/stores.png");
-            })
   .click(function(){
          
          window.localStorage.setItem("fromBackToStores",12345);
          
-         $.mobile.changePage('#five');
+         $.mobile.changePage('#five',{ transition: "slide",reverse: true});
          });
   });
 
@@ -1716,35 +2146,42 @@ $(function() {
 
 /****************************************************** PAGE 7 *******************************************************************/
 
+
+
+$("#id_back_to_store").bind('tap',function() {      
+                            $("#id_back_to_store").attr('src',"images/back_pressed.png");     
+                            });
+
+$( '#seven' ).bind( "pagebeforeshow", function(){
+                   $("#id_back_to_store").attr('src',"images/back.png");    
+                   });
 // function to change the back pic on mouse over
 $(function() {
   $("#id_back_to_store")
-  .mouseover(function() { 
-             $(this).attr('src',"images/back_pressed.png");
-             })
-  .mouseout(function() {
-            $(this).attr('src',"images/back.png");
-            })
   .click(function(){
          
-         $.mobile.changePage('#six');
+         $.mobile.changePage('#six',{ transition: "slide",reverse: true});
          });
   });
 
 
 /****************************************************** PAGE 8 *******************************************************************/
+$("#id_back").bind('tap',function() {     
+                   $("#id_back").attr('src',"images/back_pressed.png");      
+                   });
+
+$( '#eight' ).bind( "pagebeforeshow", function(){
+                   $("#id_back").attr('src',"images/back.png");    
+                   });
+
+
+
 // function to change the back pic on mouse over
 $(function() {
   $("#id_back")
-  .mouseover(function() { 
-             $(this).attr('src',"images/back_pressed.png");
-             })
-  .mouseout(function() {
-            $(this).attr('src',"images/back.png");
-            })
   .click(function(){
          
-         $.mobile.changePage('#six');
+         $.mobile.changePage('#six',{ transition: "slide",reverse: true});
          });
   });
 
@@ -1753,35 +2190,189 @@ $(function() {
 $(".btn-slide").click(function(){
                       $("#panel").slideToggle("slow");
                       $("#not_panel").css('display','block');
+                      
+                      inflateSlidingDrawer();
+                      
+                      
                       });
 
 
+
+
+
+
+
+// page 9 init
 $( '#nine' ).bind( "pageshow", function(){
                   $("#panel").css('display','none');
+                  $("#not_panel").css('display','block');
+                  // clear the list initially
+                  //$('#panel_list').empty();
+                  
+                  getAvailableItemDetails();
+                  
+                  
+                  
                   });
+
+
+
+$("#all_done").bind('tap',function() {     
+                    $("#all_done").attr('src',"images/done_pressed.png");     
+                    });
+
 
 
 $(function() {
   $("#all_done")
-  .mouseover(function() { 
-             $(this).attr('src',"images/done_pressed.png");
-             })
-  .mouseout(function() {
-            $(this).attr('src',"images/done.png");
-            })
   .click(function(){
-         $.mobile.changePage('#ten');
+         
+         var sure = confirm('Are your done with your shopping ? Will move the un-available items to a new list so that you remember to shop them.','');
+         
+         if(sure==true){
+         $.mobile.changePage('#ten',{ transition: "slide"});
+         }else{
+         // do nothing
+         }
+         
          });
   });
 
+
+
+// page 10 init
+$( '#ten' ).bind( "pageshow", function(){
+                 
+                 var delete_by_name = window.localStorage.getItem("title_of_list");
+                 console.log('TABLE TO BE DELETED IS ===='+delete_by_name);
+                 deleteRecord(delete_by_name);
+                 
+                 // fetch the current date
+                 var d = new Date();
+                 var month = d.getMonth()+1;
+                 var day = d.getDate();
+                 
+                 // date in the format of year/month/day
+                 var updated = d.getFullYear() + '/' + ((''+month).length<2 ? '0' : '') + month + '/' + ((''+day).length<2 ? '0' : '') + day;
+                 
+                 var time_stamp = new Date().getTime();
+                 var time_stamp_name = 'NotGot'+time_stamp;
+                 console.log('table name of not got is = '+time_stamp_name);
+                 
+                 if(notGotItArray.length != 0){
+                 // update the database (This will insert in the PIN_POINT table)
+                 insertRecord(time_stamp_name,notGotItArray.length,updated); 
+                 
+                 // save the title in the local storage
+                 window.localStorage.setItem("title_of_list",time_stamp_name);
+                 
+                 // update the UI
+                 $('#id_ul').append('<li id="main_full_row" class="custom_listview_img"> <h1 class="list_title" id="list_title">'+ time_stamp_name +'</h1><p class="list_items">'+ notGotItArray.length +'</p> <p class="list_time">UPDATED :- '+updated+'</p><img  id="deleteMe" style="margin-left: 275px; margin-top: 49px;" src="images/curl.png" /></li>');
+                 
+                 console.log("NOT GOT inserted :--"+time_stamp_name);
+                 
+                 
+                 // Create the list table in the data base for later use
+                 createNotGotListTable();
+                 }
+                 });
+
+
+
+
+
+/************************ DB for not got ***************************************/
+
+
+function createNotGotListTable(){
+    console.log("inside createListTable() !!!!");
+    
+    var db = window.openDatabase("Database", "1.0", "Pin Point", 200000);
+    db.transaction(notGotListPopulate, notGotListError, notGotListSuccess);
+}
+
+
+
+
+// Create the database (Populate the database)
+function notGotListPopulate(tx) {
+    
+    var table_name = window.localStorage.getItem("title_of_list");
+    //alert('table to be created is ='+table_name);
+    
+    console.log("listPopulating.... listPopulate()");
+    
+    var dropListSQL = 'DROP TABLE IF EXISTS '+table_name;
+    //alert('drop statement'+dropListSQL);
+    console.log(dropListSQL);
+    
+    tx.executeSql(dropListSQL);
+    
+    var createListTableSQL = 'CREATE TABLE IF NOT EXISTS ' + table_name + '  (id integer primary key autoincrement, listItemName  , listItemCategory, listItemID,  listItemImage, listAisleNumber, listQuantity)';
+    //alert(createListTableSQL);
+    console.log(createListTableSQL);
+    
+    tx.executeSql(createListTableSQL);
+    console.log("NOT GOT LIST  table is created...   :) ");
+}
+
+
+// Transaction error callback
+function notGotListError(err) {
+    alert("notGotListError::--- Error processing SQL: "+err);
+}
+
+// Transaction success callback
+function notGotListSuccess() {
+    console.log("notGotListSuccess  SUCCESS .............. ##################");   
+    
+    var db = window.openDatabase("Database", "1.0", "Pin Point", 200000);     
+    db.transaction(storeIntoNotGotListTable, notGotListError);
+}
+
+
+
+
+function storeIntoNotGotListTable(tx) {
+    
+    // table name is same as the title of the list
+    var table_name = window.localStorage.getItem("title_of_list");
+    console.log('NOT GOT inserting into table  ='+table_name);
+    console.log("NOT GOT inserting into list table....");
+    
+    
+    var insertListStatement = 'INSERT INTO ' + table_name + ' (listItemName  , listItemCategory, listItemID,  listItemImage, listAisleNumber, listQuantity)  VALUES (?,?,?,?,?,?)';
+    
+    var db = window.openDatabase("Database", "1.0", "Pin Point", 200000);
+    
+    db.transaction(function(tx) 
+                   {
+                   for(var i=0;i<notGotItArray.length;i++){
+                   tx.executeSql(insertListStatement, [notGotItArray[i] , notGotItCategoryArray[i] , 'no id' , notGotItURLArray[i], 'no aisle' , notGotItQtyArray[i]],insertedNotGotListSucess, notGotListError);
+                   }
+                   });
+    
+}
+
+
+function insertedNotGotListSucess(){
+    console.log("insertedListSucess......");
+}
+
+
+
+/******************************************************************************/
+$("#pulldown").bind('tap',function() {      
+                    $("#pulldown").attr('src',"images/pulldown_bar_pressed.png");     
+                    });
+
+$( '#nine' ).bind( "pagebeforeshow", function(){
+                  $("#pulldown").attr('src',"images/pulldown_bar.png");    
+                  $("#all_done").attr('src',"images/done.png");   
+                  });
+
 $(function() {
   $("#pulldown")
-  .mouseover(function() { 
-             $(this).attr('src',"images/pulldown_bar_pressed.png");
-             })
-  .mouseout(function() {
-            $(this).attr('src',"images/pulldown_bar.png");
-            })
   .click(function(){
          // click is already handled by panel
          });
@@ -1790,86 +2381,164 @@ $(function() {
 
 /****************************************************** PAGE 10 *******************************************************************/
 
+
+
+
+$("#id_back_dashboard").bind('tap',function() {     
+                             $("#id_back_dashboard").attr('src',"images/dashboard_pressed.png");     
+                             });
+
+$( '#ten' ).bind( "pagebeforeshow", function(){
+                 $("#id_back_dashboard").attr('src',"images/dashboard.png"); 
+                 $("#id_another_list").attr('src',"images/another_list.png");  
+                 });
 // function to toggle the new list image
 // on click goto the oneB page
 $(function() {
   $("#id_back_dashboard")
-  .mouseover(function() { 
-             $(this).attr('src',"images/dashboard_pressed.png");
-             })
-  .mouseout(function() {
-            $(this).attr('src',"images/dashboard.png");
-            })
   .click(function(){
-         $.mobile.changePage('#homepage');
+         $.mobile.changePage('#homepage',{ transition: "slide",reverse: true});
          });
   });
+
+$("#id_another_list").bind('tap',function() {     
+                           $("#id_another_list").attr('src',"images/another_list_pressed.png");      
+                           });
 
 
 
 $(function() {
   $("#id_another_list")
-  .mouseover(function() { 
-             $(this).attr('src',"images/another_list_pressed.png");
-             })
-  .mouseout(function() {
-            $(this).attr('src',"images/another_list.png");
-            })
   .click(function(){
-         $.mobile.changePage('#oneB');
+         $.mobile.changePage('#oneB',{ transition: "slide"});
          });
   });
 
+/*************************************************************************************************************************************/
 
 
-/********** GALLERY ******************/
+/********** GALLERY   ******************/
 
 
-var allImagesArray = new Array();
-allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/184020063_100x100.jpg');
-allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/165020004_100x100.jpg');
-allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/165020022_100x100.jpg');
-/*allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/960023176_100x100.jpg');
- allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/960043683_100x100.jpg');
- allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/165090027_100x100.jpg');
- allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/165090012_100x100.jpg');
- allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/165050258_100x100.jpg');
- allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/165050276_100x100.jpg');
- allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/960018932_100x100.jpg');
- allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/960046207_100x100.jpg');
- allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/119020308_100x100.jpg');
- allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/119030702_100x100.jpg');
- allImagesArray.push('http://smapistorage.blob.core.windows.net/thumbimages/960048295_100x100.jpg');
- */
+
+
+// get the name of the store
+// get all the images in the available list of the store....
+// get all the name of items in the avilable list of the store....
 
 
 var allImageNameArray = new Array();
+var allImagesArray = new Array();
+var allImageCategory = new Array();
+var allImageQty = new Array();
 
-allImageNameArray.push('apple');
-allImageNameArray.push('bottle');
-allImageNameArray.push('box');
+var gotItArray = new Array();
+var gotItURLArray = new Array();
+var gotItQtyArray = new Array();
+var gotItCategoryArray = new Array();
 
-
-console.log('length== '+allImagesArray.length);
-console.log(' 0 % == '+0%allImagesArray.length);
-console.log(' 1 % == '+1%allImagesArray.length);
-console.log(' 2 % == '+2%allImagesArray.length);
-console.log(' 3 % == '+3%allImagesArray.length);
-console.log(' 4 % == '+4%allImagesArray.length);
-
-var i=-1;
-var cntr = -1;
+var notGotItArray = new Array();
+var notGotItQtyArray = new Array();
+var notGotItURLArray = new Array();
+var notGotItCategoryArray = new Array();
 
 
+function getAvailableItemDetails(){
+    
+    allImageNameArray=[];
+    allImagesArray =[];
+    allImageCategory = [];
+    allImageQty = [];
+    
+    gotItArray = [];
+    gotItURLArray = [];
+    gotItQtyArray = [];
+    gotItCategoryArray = [];
+    
+    notGotItArray = [];
+    notGotItURLArray = [];
+    notGotItQtyArray = [];
+    notGotItCategoryArray = [];
+    
+    var db = window.openDatabase("Database", "1.0", "Pin Point", 200000);
+    db.transaction(fetchAvailableItemDetails, errorGallery);
+}
 
-$('#left_image').attr('src',allImagesArray[0]);
-$('#active_image').attr('src',allImagesArray[1]);
-var tag_name = allImageNameArray[1];
-$('#right_image').attr('src',allImagesArray[2]);
 
-console.log('TAG NAME == '+tag_name);
+function fetchAvailableItemDetails(tx) {
+    
+    console.log("fetchAvailableItemDetails(tx)");
+    
+    
+    var store_id = window.localStorage.getItem("store_id");
+    var store_fullname = 'STORE_'+store_id;
+    console.log('STORE FULL NAME ===== '+store_fullname);
+    
+    var fetchAvailableStatement = 'SELECT storeItemName  , storeItemCategory, storeItemID,  storeItemImage, storeAisleNumber, storeQuantity,storeAvailable FROM '+store_fullname+'  WHERE storeAvailable = "yes"';
+    console.log('fetchAvailableStatement == '+fetchAvailableStatement);
+    
+    tx.executeSql(fetchAvailableStatement, [], fetchAvailableSuccess, errorGallery);
+    
+}
 
 
+
+
+
+function fetchAvailableSuccess(tx, results) {
+    
+    console.log("fetchAvailableSuccess()...");
+    
+    var len = results.rows.length;
+    console.log('Total ITEMS IN STORE ARE  ................  == '+len);
+    
+    
+    for(var i=0;i<len;i++){                
+        allImageNameArray.push(results.rows.item(i).storeItemName);
+        allImagesArray.push(results.rows.item(i).storeItemImage);
+        allImageCategory.push(results.rows.item(i).storeItemCategory);
+        allImageQty.push(results.rows.item(i).storeQuantity);
+        
+    }
+    
+    for(var i=0;i<len;i++){                
+        console.log('NAME >>> '+i+' <<<' +allImageNameArray[i]);
+        console.log('URL >>> '+i+' <<<' +allImagesArray[i]);
+        console.log('CATGEGORY >>> '+i+' <<<' +allImageCategory[i]);
+        console.log('QUANTITY >>> '+i+' <<<' +allImageQty[i]);
+    }
+    
+    setTheInitialImages();
+}
+// initialization
+var i=1;
+var cntr = 1;
+
+function setTheInitialImages(){
+    // initialization
+    
+    $('#left_image').attr('src',allImagesArray[0]);
+    
+    $('#active_image').attr('src',allImagesArray[1]);
+    var tag_name = allImageNameArray[1];
+    $('#gallery_product_name').html(tag_name);
+    console.log('TAG NAME == '+tag_name);
+    window.localStorage.setItem("tag_name",tag_name);
+    window.localStorage.setItem("tag_url",allImagesArray[1]);
+    window.localStorage.setItem("tag_category",allImageCategory[1]);
+    window.localStorage.setItem("tag_qty",allImageQty[1]);
+    
+    $('#right_image').attr('src',allImagesArray[2]);
+    
+}
+
+
+// Transaction error callback
+function errorGallery(err) {
+    alert("errorGallery ::--- Error processing SQL: "+err);
+}
+
+var animation_speed= 500;
 
 function swipedRight(){
     
@@ -1878,7 +2547,7 @@ function swipedRight(){
     
     
     // LEFT
-    $('#left_image').animate({'width': '0','margin-left': '100px'},300,function(){
+    $('#left_image').animate({'width': '0','margin-left': '100px'},animation_speed,function(){
                              
                              console.log('value of i== '+i);
                              
@@ -1892,7 +2561,7 @@ function swipedRight(){
                              });
     
     // CENTER
-    $('#active_image').animate({'width': '0','margin-left': '200px'},300,function(){
+    $('#active_image').animate({'width': '0','margin-left': '200px'},animation_speed,function(){
                                
                                cntr = (i+1)%allImagesArray.length;
                                cntr = Math.abs(cntr);
@@ -1901,15 +2570,20 @@ function swipedRight(){
                                $('#active_image').attr('src',allImagesArray[cntr]);
                                tag_name = allImageNameArray[cntr];
                                console.log('TAG NAME == '+tag_name);
-                               
                                $('#gallery_product_name').html(tag_name);
+                               
+                               window.localStorage.setItem("tag_name",tag_name);
+                               window.localStorage.setItem("tag_url",allImagesArray[cntr]);
+                               window.localStorage.setItem("tag_category",allImageCategory[cntr]);
+                               window.localStorage.setItem("tag_qty",allImageQty[cntr]);
+                               
                                
                                $('#active_image').css('margin-left','99px');
                                $('#active_image').css('width','130px');
                                });
     
     // RIGHT
-    $('#right_image').animate({'width': '0','margin-left': '300px'},300,function(){
+    $('#right_image').animate({'width': '0','margin-left': '300px'},animation_speed,function(){
                               
                               cntr = i%allImagesArray.length;
                               cntr = Math.abs(cntr);
@@ -1932,9 +2606,8 @@ function swipedLeft(){
     console.log('...................................................................................................... LEFT SWIPE ')
     console.log('swipedLeft value of i== '+i);
     
-    
     // LEFT
-    $('#left_image').animate({width: 'toggle'},300,function(){
+    $('#left_image').animate({width: 'toggle'},animation_speed,function(){
                              
                              console.log('ZERO value of i== '+i);
                              
@@ -1946,7 +2619,7 @@ function swipedLeft(){
                              });
     
     // CENTER
-    $('#active_image').animate({width: 'toggle'},300,function(){
+    $('#active_image').animate({width: 'toggle'},animation_speed,function(){
                                
                                cntr = (i+1)%allImagesArray.length;
                                console.log('COUNTER AT CENTER ==== '+cntr);
@@ -1955,12 +2628,16 @@ function swipedLeft(){
                                tag_name = allImageNameArray[cntr];
                                console.log('TAG NAME == '+tag_name);
                                $('#gallery_product_name').html(tag_name);
+                               window.localStorage.setItem("tag_name",tag_name);
+                               window.localStorage.setItem("tag_url",allImagesArray[cntr]);
+                               window.localStorage.setItem("tag_category",allImageCategory[cntr]);
+                               window.localStorage.setItem("tag_qty",allImageQty[cntr]);
                                
                                $('#active_image').css('display','block');
                                });
     
     // RIGHT
-    $('#right_image').animate({width: 'toggle'},300,function(){
+    $('#right_image').animate({width: 'toggle'},animation_speed,function(){
                               
                               cntr = (i+2)%allImagesArray.length;
                               console.log('COUNTER AT RIGHT ==== '+cntr);
@@ -1973,34 +2650,259 @@ function swipedLeft(){
     i++;
 }
 
+// Gallery LEFT-RIGHT SWIPE 
+$(function(){
+  
+  $("#gallery_div").swiperight(function() {  
+                               swipedRight(); 
+                               });
+  
+  
+  $("#gallery_div").swipeleft(function() {
+                              swipedLeft();   
+                              });
+  
+  });
 
 
-$("#gallery_div").swiperight(function() {  
-                             swipedRight(); 
+
+function inflateSlidingDrawer(){
+    
+    console.log('inside inflateSlidingDrawer()');
+    $('#panel_list').empty();
+    
+    /* for(var i=0;i<gotItArray.length;i++){
+     $('#panel_list').append('<li class="custom_listview_img_edge"><img width="45" height="45" class="panel_sub_category_img" src="'+gotItURLArray[i]+'" /><h6 class="panel_sub_category_name">'+gotItArray[i]+'</h6><p class="panel_sub_category_quantity"> QTY :- 12 oz </p><img class="panel_sub_category_rightside" src="images/got_it_checkmark.png" /></li>');
+     }
+     
+     for(var i=0;i<notGotItArray.length;i++){
+     $('#panel_list').append('<li class="custom_listview_img_edge"><img width="45" height="45" class="panel_sub_category_img" src="'+notGotItURLArray[i]+'" /><h6 class="panel_sub_category_name">'+notGotItArray[i]+'</h6><p class="panel_sub_category_quantity"> QTY :- 12 oz </p><img class="panel_sub_category_rightside" src="images/cant_get_it_sad_face.png" /></li>');
+     }*/
+    
+    
+    
+    var total_cnt = gotItArray.length + notGotItArray.length;
+    var new_html = gotItArray.length + '/' + total_cnt +' items in the cart';
+    $('.text_orange').html(new_html);
+    
+    var missed = total_cnt - gotItArray.length;
+    var cant_get = "(CAN'T GET "+ missed + " ITEMS)";
+    $('.text_gray').html(cant_get);
+    
+    
+    
+    
+    
+    // combine both the categories array
+    console.log(' gotItCategoryArray.length BEFORE  === '+gotItCategoryArray.length);
+    var unique_category_array = new Array();
+    //unique_category_array = gotItCategoryArray;
+    
+    for(var i=0;i<gotItCategoryArray.length;i++){
+        unique_category_array.push(gotItCategoryArray[i]);
+    }
+    
+    console.log(' gotItCategoryArray.length AFTER  === '+gotItCategoryArray.length);
+    
+    for(var i=0;i<notGotItCategoryArray.length;i++){
+        unique_category_array.push(notGotItCategoryArray[i]);
+        console.log(' gotItCategoryArray.length AFTER FOR LOOP === '+gotItCategoryArray.length);
+    }
+    
+    console.log(' gotItCategoryArray.length AFTER 2222 === '+gotItCategoryArray.length);
+    // make a unique array of all categories 
+    
+    var unique_category_array=unique_category_array.filter(function(itm,i,unique_category_array){
+                                                           return i==unique_category_array.indexOf(itm);
+                                                           });
+    console.log(' gotItCategoryArray.length AFTER 333333 === '+gotItCategoryArray.length);
+    console.log('UNIQUE ARRAY IS AS FOLLOWS ');
+    
+    for(var i=0;i<unique_category_array.length;i++){
+        console.log('At index '+ i +' == '+unique_category_array[i]);
+    }
+    console.log(' gotItCategoryArray.length AFTER 4444 === '+gotItCategoryArray.length);
+    console.log('  gotItArray.length === '+ gotItArray.length);
+    console.log(' gotItCategoryArray.length === '+gotItCategoryArray.length);
+    console.log(' unique_category_array.length === '+unique_category_array.length);
+    console.log('notGotItCategoryArray.length ==== '+notGotItCategoryArray.length);
+    
+    
+    
+    for(var i=0;i<unique_category_array.length;i++){
+        var is_category = unique_category_array[i];
+        
+        // append cat
+        $('#panel_list').append('<li class="categories_major_panel"><p class="panel_category">'+is_category+'</p></li>');
+        
+        for(var j=0;j<gotItCategoryArray.length;j++){
+            console.log('first for loop count == '+j);
+            
+            if(gotItCategoryArray[j] == is_category){
+                // add the item in index j
+                $('#panel_list').append('<li class="custom_listview_img_edge"><img width="45" height="45" class="panel_sub_category_img" src="'+gotItURLArray[j]+'" /><h6 class="panel_sub_category_name">'+gotItArray[j]+'</h6><p class="panel_sub_category_quantity"> QTY :- '+gotItQtyArray[j]+' </p><img class="panel_sub_category_rightside" src="images/got_it_checkmark.png" /></li>');
+            }
+        }
+        
+        for(var j=0;j<notGotItCategoryArray.length;j++){
+            if(notGotItCategoryArray[j] == is_category){
+                // add the item in index j
+                $('#panel_list').append('<li class="custom_listview_img_edge"><img width="45" height="45" class="panel_sub_category_img" src="'+notGotItURLArray[j]+'" /><h6 class="panel_sub_category_name">'+notGotItArray[j]+'</h6><p class="panel_sub_category_quantity"> QTY :- '+notGotItQtyArray[j]+' </p><img class="panel_sub_category_rightside" src="images/cant_get_it_sad_face.png" /></li>');
+            } 
+        }
+    }
+    $('#panel_list').listview('refresh');
+}
+
+// Sliding drawer TOP/DOWN SWIPE
+$(function(){
+  
+  $("#down_swipe").bind('swipedown',function() {
+                        $("#panel").slideDown("fast");
+                        $("#not_panel").css('display','none');
+                        //$('#panel_list').listview('refresh');
+                        inflateSlidingDrawer();
+                        });
+  
+  $("#down_swipe").bind('swipeup',function() {
+                        $("#panel").slideUp("fast");
+                        $("#not_panel").css('display','block');
+                        });
+  
+  });
+
+
+
+
+// on clikck og got it / not got it 
+$(function(){
+  
+  $('.got_it_div').click(function(){
+                         
+                         console.log('GOT IT DIV ');
+                         
+                         var temp_name = window.localStorage.getItem("tag_name");
+                         console.log('tag name  == '+temp_name);
+                         
+                         var temp_url = window.localStorage.getItem("tag_url");
+                         console.log('temp_url == '+temp_url);
+                         
+                         var temp_cat = window.localStorage.getItem("tag_category");
+                         console.log('temp_cat == '+temp_cat);
+                         
+                         var temp_qty = window.localStorage.getItem("tag_qty");
+                         console.log('temp_qty == '+temp_qty);
+                         
+                         var check_flag_got_it = gotItArray.indexOf(temp_name);
+                         console.log('CHECK FLAG check_flag_got_it == '+check_flag_got_it);
+                         
+                         if(check_flag_got_it == -1){ // NOT PRESENT , add it 
+                         console.log('item added to gotItArray[]');
+                         
+                         gotItArray.push(temp_name); // add name to the got it list
+                         gotItURLArray.push(temp_url);
+                         gotItCategoryArray.push(temp_cat);
+                         gotItQtyArray.push(temp_qty);
+                         
+                         // add to UI
+                         //$('#panel_list').append('<li class="custom_listview_img_edge"><img width="45" height="45" class="panel_sub_category_img" src="'+window.localStorage.getItem("tag_url")+'" /><h6 class="panel_sub_category_name">'+temp_name+'</h6><p class="panel_sub_category_quantity"> QTY :- 12 oz </p><img class="panel_sub_category_rightside" src="images/got_it_checkmark.png" /></li>');
+                         
+                         
+                         var check_flag_not_got_it = notGotItArray.indexOf(temp_name);
+                         console.log('CHECK FLAG check_flag_not_got_it == '+check_flag_not_got_it);
+                         
+                         if(check_flag_not_got_it != -1 ){ // PRESENT , delete it
+                         // delete it
+                         console.log('DELETE FROM NOT GOT ARRAY');
+                         notGotItArray.splice(check_flag_not_got_it,1);
+                         notGotItURLArray.splice(check_flag_not_got_it,1);
+                         notGotItCategoryArray.splice(check_flag_not_got_it,1);
+                         notGotItQtyArray.splice(check_flag_not_got_it,1);
+                         }
+                         
+                         // update the drawer
+                         }else{
+                         alert('already added '+temp_name);
+                         }
+                         
+                         // just to clear the hover effect
+                         $('.got_it_div').trigger('mouseleave');
+                         
+                         });
+  
+  
+  
+  
+  $('.not_got_it_div').click(function(){
+                             
+                             console.log('NOT GOT IT DIV ');
+                             
+                             var temp_name = window.localStorage.getItem("tag_name");
+                             console.log('tag name  == '+temp_name);
+                             
+                             var temp_url = window.localStorage.getItem("tag_url");
+                             console.log('temp_url == '+temp_url);
+                             
+                             var temp_cat = window.localStorage.getItem("tag_category");
+                             console.log('temp_cat == '+temp_cat);
+                             
+                             var temp_qty = window.localStorage.getItem("tag_qty");
+                             console.log('temp_qty == '+temp_qty);
+                             
+                             var flag_notGotItArray = notGotItArray.indexOf(temp_name);
+                             console.log('CHECK FLAG flag_notGotItArray == '+flag_notGotItArray);
+                             
+                             if(flag_notGotItArray == -1){ // NOT PRESENT , add it 
+                             console.log('item added to notGotItArray[]');
+                             
+                             notGotItArray.push(temp_name); // add name to the NOT got it list
+                             notGotItURLArray.push(temp_url);
+                             notGotItCategoryArray.push(temp_cat);
+                             notGotItQtyArray.push(temp_qty);
+                             
+                             var flag_delete = gotItArray.indexOf(temp_name);
+                             console.log('CHECK FLAG flag_delete == '+flag_delete);
+                             
+                             if(flag_delete != -1 ){ // PRESENT , delete it
+                             // delete it
+                             console.log('DELETE FROM GOT ARRAY');
+                             gotItArray.splice(flag_delete,1);
+                             gotItURLArray.splice(flag_delete,1);
+                             gotItCategoryArray.splice(flag_delete,1);
+                             gotItQtyArray.splice(flag_delete,1);
+                             
+                             
+                             }
+                             
+                             // update the drawer
+                             }else{
+                             alert('already deleted '+temp_name);
+                             }
+                             
+                             
+                             $('.not_got_it_div').trigger('mouseleave');
+                             
                              });
+  
+  });
 
 
-$("#gallery_div").swipeleft(function() {
-                            swipedLeft();   
-                            });
+$(function() {
+  $(".not_got_it_div")
+  .mouseover(function() { 
+             $(this).css('background','orange');
+             })
+  .mouseleave(function() {
+              $(this).css('background','white');
+              });      
+  });
 
-
-
-
-$("#down_swipe").bind('swipedown',function() {
-                      
-                      $("#panel").slideDown("slow");
-                      $("#not_panel").css('display','none');
-                      
-                      });
-
-
-$("#down_swipe").bind('swipeup',function() {
-                      $("#panel").slideUp("slow");
-                      $("#not_panel").css('display','block');
-                      });
-
-
-
-
-
+$(function() {
+  $(".got_it_div")
+  .mouseover(function() {        
+             $(this).css('background','orange');           
+             })
+  .mouseleave(function() {       
+              $(this).css('background','white');
+              });        
+  });

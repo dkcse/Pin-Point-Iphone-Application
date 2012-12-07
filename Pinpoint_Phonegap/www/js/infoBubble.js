@@ -1213,7 +1213,7 @@ InfoBubble.prototype.imageLoaded_ = function() {
     }
 };
 
-/**
+/*
  * Updates the styles of the tabs
  * @private
  */
